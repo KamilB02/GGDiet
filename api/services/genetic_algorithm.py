@@ -64,8 +64,75 @@ available_recipes = [
      'meal_type': ['snack']},
     {'name': 'Zapiekanka makaronowa z serem', 'calories': 450, 'macros': {'protein': 20, 'carbs': 60, 'fats': 15},
      'meal_type': ['dinner']},
-    # ...
+    {'name': 'Kasza jaglana z pieczonymi warzywami', 'calories': 340, 'macros': {'protein': 12, 'carbs': 55, 'fats': 6},
+     'meal_type': ['lunch', 'dinner']},
+    {'name': 'Smoothie truskawkowo-jogurtowe', 'calories': 220, 'macros': {'protein': 8, 'carbs': 40, 'fats': 5},
+     'meal_type': ['breakfast', 'snack']},
+    {'name': 'Chili z fasolą i warzywami', 'calories': 400, 'macros': {'protein': 18, 'carbs': 50, 'fats': 12},
+     'meal_type': ['lunch', 'dinner']},
+    {'name': 'Tosty z jajkiem i szpinakiem', 'calories': 310, 'macros': {'protein': 15, 'carbs': 35, 'fats': 12},
+     'meal_type': ['breakfast', 'lunch']},
+    {'name': 'Ryż z pieczarkami i brokułami', 'calories': 330, 'macros': {'protein': 10, 'carbs': 50, 'fats': 8},
+     'meal_type': ['lunch', 'dinner']},
+    {'name': 'Zapiekanka z ziemniakami i szpinakiem', 'calories': 380,
+     'macros': {'protein': 15, 'carbs': 45, 'fats': 10},
+     'meal_type': ['dinner']},
+    {'name': 'Owsianka z masłem orzechowym i bananem', 'calories': 350,
+     'macros': {'protein': 12, 'carbs': 55, 'fats': 12},
+     'meal_type': ['breakfast']},
+    {'name': 'Quinoa z pieczoną papryką i cukinią', 'calories': 300, 'macros': {'protein': 10, 'carbs': 40, 'fats': 8},
+     'meal_type': ['lunch', 'dinner']},
+    {'name': 'Kanapka z hummusem i pomidorem', 'calories': 280, 'macros': {'protein': 7, 'carbs': 35, 'fats': 10},
+     'meal_type': ['breakfast', 'lunch']},
+    {'name': 'Koktajl białkowy z owocami leśnymi', 'calories': 250, 'macros': {'protein': 20, 'carbs': 35, 'fats': 5},
+     'meal_type': ['breakfast', 'snack']},
+    {'name': 'Filet z kurczaka w sosie szpinakowym', 'calories': 400,
+     'macros': {'protein': 30, 'carbs': 15, 'fats': 18},
+     'meal_type': ['lunch', 'dinner']},
+    {'name': 'Makaron z pomidorami i bazylią', 'calories': 350, 'macros': {'protein': 12, 'carbs': 55, 'fats': 10},
+     'meal_type': ['lunch', 'dinner']},
+    {'name': 'Budyń jaglany z owocami', 'calories': 240, 'macros': {'protein': 6, 'carbs': 35, 'fats': 8},
+     'meal_type': ['breakfast', 'snack']},
+    {'name': 'Szaszłyki warzywne z tofu', 'calories': 300, 'macros': {'protein': 15, 'carbs': 30, 'fats': 12},
+     'meal_type': ['lunch', 'dinner']},
+    {'name': 'Jajka sadzone z pomidorami i rukolą', 'calories': 250, 'macros': {'protein': 14, 'carbs': 5, 'fats': 18},
+     'meal_type': ['breakfast']},
+    {'name': 'Placuszki z cukinii', 'calories': 280, 'macros': {'protein': 10, 'carbs': 30, 'fats': 12},
+     'meal_type': ['breakfast', 'lunch']},
+    {'name': 'Kurczak curry z warzywami', 'calories': 380, 'macros': {'protein': 30, 'carbs': 25, 'fats': 15},
+     'meal_type': ['lunch', 'dinner']},
+    {'name': 'Owsianka z cynamonem i orzechami', 'calories': 320, 'macros': {'protein': 10, 'carbs': 40, 'fats': 10},
+     'meal_type': ['breakfast']},
+    {'name': 'Pieczone bataty z fasolą i kukurydzą', 'calories': 350, 'macros': {'protein': 12, 'carbs': 60, 'fats': 8},
+     'meal_type': ['lunch', 'dinner']},
+    {'name': 'Makaron z cukinią i suszonymi pomidorami', 'calories': 400,
+     'macros': {'protein': 15, 'carbs': 65, 'fats': 8},
+     'meal_type': ['lunch', 'dinner']},
+    {'name': 'Shake proteinowy z masłem orzechowym i bananem', 'calories': 300,
+     'macros': {'protein': 25, 'carbs': 30, 'fats': 10}, 'meal_type': ['breakfast', 'snack', 'dinner']},
+
+    {'name': 'Shake proteinowy z jagodami i migdałami', 'calories': 250,
+     'macros': {'protein': 20, 'carbs': 25, 'fats': 8}, 'meal_type': ['breakfast', 'snack', 'dinner']},
+
+    {'name': 'Shake czekoladowo-bananowy', 'calories': 280,
+     'macros': {'protein': 22, 'carbs': 35, 'fats': 6}, 'meal_type': ['breakfast', 'snack', 'dinner']},
+
+    {'name': 'Shake truskawkowo-jogurtowy', 'calories': 260,
+     'macros': {'protein': 18, 'carbs': 30, 'fats': 5}, 'meal_type': ['breakfast', 'snack', 'dinner']},
+
+    {'name': 'Shake owsiany z białkiem waniliowym', 'calories': 320,
+     'macros': {'protein': 24, 'carbs': 40, 'fats': 8}, 'meal_type': ['breakfast', 'snack', 'dinner']},
+
+    {'name': 'Shake z mlekiem kokosowym i ananasem', 'calories': 280,
+     'macros': {'protein': 15, 'carbs': 30, 'fats': 12}, 'meal_type': ['breakfast', 'snack', 'dinner']},
+
+    {'name': 'Shake orzechowo-białkowy z cynamonem', 'calories': 300,
+     'macros': {'protein': 20, 'carbs': 20, 'fats': 15}, 'meal_type': ['breakfast', 'snack', 'dinner']},
+
+    {'name': 'Shake z borówkami i mlekiem migdałowym', 'calories': 270,
+     'macros': {'protein': 18, 'carbs': 30, 'fats': 8}, 'meal_type': ['breakfast', 'snack', 'dinner']}
 ]
+
 
 
 # Klasa reprezentująca plan dietetyczny
@@ -88,7 +155,7 @@ class DietPlan:
 
 
 # Generowanie początkowej populacji
-def generate_initial_population(user_requirements, size=1000000):
+def generate_initial_population(user_requirements, size=1000):
     population = []
 
     # Zakładamy, że dostępne przepisy są posegregowane na kategorie
@@ -103,6 +170,9 @@ def generate_initial_population(user_requirements, size=1000000):
         selected_lunch = random.sample(lunch_recipes, k=1)
         # Wybierz 1 przepis na kolację
         selected_dinner = random.sample(dinner_recipes, k=1)
+
+        while selected_dinner[0] == selected_lunch[0]:
+            selected_dinner = random.sample(dinner_recipes, k=1)
 
         # Tworzenie obiektu DietPlan z podziałem na posiłki
         diet_plan = DietPlan(
@@ -122,9 +192,9 @@ def fitness(plan, user_requirements):
     # Przykład: dodaj punkty za kalorie i makroskładniki
     if plan.calories <= user_requirements['calories']:
         if plan.calories - user_requirements['calories'] <= 20:
-            score += 100
+            score += 30
     else:
-        score += 1
+        score -= 25
 
     if plan.macros['protein'] <= user_requirements['protein']:
         if abs(plan.calories - user_requirements['protein']) <= 4:
@@ -133,28 +203,45 @@ def fitness(plan, user_requirements):
             score += 50
         elif abs(plan.calories - user_requirements['protein']) <= 15:
             score += 25
+        elif abs(plan.calories - user_requirements['protein']) <= 20:
+            score -= 50
+        else:
+            score -= 100
+
+    if plan.macros['carbs'] <= user_requirements['carbs']:
+        if abs(plan.calories - user_requirements['carbs']) <= 4:
+            score += 100
+        elif abs(plan.calories - user_requirements['carbs']) <= 10:
+            score += 50
+        elif abs(plan.calories - user_requirements['carbs']) <= 15:
+            score += 25
+        else:
+            score -= 100
+
+    if plan.macros['fats'] <= user_requirements['fats']:
+        if abs(plan.calories - user_requirements['fats']) <= 4:
+            score += 100
+        elif abs(plan.calories - user_requirements['fats']) <= 10:
+            score += 50
+        elif abs(plan.calories - user_requirements['fats']) <= 15:
+            score += 25
         else:
             score -= 10
 
-    if plan.macros['carbs'] <= user_requirements['carbs']:
-        if plan.calories - user_requirements['carbs'] <= 4:
-            score += 100
-    else:
-        score += 1
+    if plan.macros['fats'] < 30:
+        score -= 50
 
-    if plan.macros['fats'] <= user_requirements['fats']:
-        if plan.calories - user_requirements['fats'] <= 4:
-            score += 100
-    else:
-        score += 1
-    # Dodaj inne kryteria oceny
     print(score)
     return score
 
 
 # Algorytm genetyczny
-def genetic_algorithm(user_requirements, generations=2):
+def genetic_algorithm(user_requirements, generations=10000):
     population = generate_initial_population(user_requirements)
+
+    breakfast_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type']]
+    lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type']]
+    dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type']]
 
     for generation in range(generations):
         population.sort(key=lambda x: fitness(x, user_requirements), reverse=True)
@@ -168,14 +255,16 @@ def genetic_algorithm(user_requirements, generations=2):
             crossover_lunch = random.sample(parent1.lunch + parent2.lunch, k=1)
             crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
 
+            while crossover_dinners[0] == crossover_lunch[0]:
+                crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
+
+            while crossover_breakfasts[0] == crossover_breakfasts[1]:
+                crossover_breakfasts = random.sample(breakfast_recipes, k=2)
+
             new_population.append(DietPlan(crossover_breakfasts, crossover_lunch, crossover_dinners))
 
         # Mutacja
         for plan in new_population:
-
-            breakfast_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type']]
-            lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type']]
-            dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type']]
 
             if random.random() < 0.1:  # 10% szans na mutację
                 # Mutacja śniadań
@@ -188,6 +277,9 @@ def genetic_algorithm(user_requirements, generations=2):
 
                 # Mutacja kolacji
                 if random.random() < 0.5:  # 50% szans na mutację kolacji
+                    plan.dinner[0] = random.choice(dinner_recipes)
+
+                while plan.dinner[0] == plan.lunch[0]:
                     plan.dinner[0] = random.choice(dinner_recipes)
 
                 # Aktualizacja kalorii i makroskładników po mutacji
