@@ -4,12 +4,13 @@ from all_recipes import available_recipes
 used_recipes = set()
 # Klasa reprezentująca plan dietetyczny
 class DietPlan:
-    def __init__(self, breakfast, lunch, dinner):
-        self.breakfast = breakfast
+    def __init__(self, breakfast1, breakfast2, lunch, dinner):
+        self.breakfast1 = breakfast1
+        self.breakfast2 = breakfast2
         self.lunch = lunch
         self.dinner = dinner
 
-        self.recipes = self.breakfast + self.lunch + self.dinner
+        self.recipes = self.breakfast1 + self.breakfast2 + self.lunch + self.dinner
         self.calories = sum(recipe['calories'] for recipe in self.recipes)
         self.macros = self.calculate_macros()
 
@@ -31,7 +32,8 @@ def generate_initial_population(user_requirements, size=20000):
 
     for _ in range(size):
 
-        selected_breakfasts = random.sample([r for r in breakfast_recipes if r['name'] not in used_recipes], k=2)
+        selected_breakfast1 = random.sample([r for r in breakfast_recipes if r['name'] not in used_recipes], k=1)
+        selected_breakfast2 = random.sample([r for r in breakfast_recipes if r['name'] not in used_recipes], k=1)
         selected_lunch = random.sample([r for r in lunch_recipes if r['name'] not in used_recipes], k=1)
         selected_dinner = random.sample([r for r in dinner_recipes if r['name'] not in used_recipes], k=1)
 
@@ -40,7 +42,8 @@ def generate_initial_population(user_requirements, size=20000):
 
         # Tworzenie obiektu DietPlan z podziałem na posiłki
         diet_plan = DietPlan(
-            breakfast=selected_breakfasts,
+            breakfast1=selected_breakfast1,
+            breakfast2=selected_breakfast2,
             lunch=selected_lunch,
             dinner=selected_dinner
         )
@@ -56,9 +59,11 @@ def fitness(plan, user_requirements):
     # Przykład: dodaj punkty za kalorie i makroskładniki
     if plan.calories <= user_requirements['calories']:
         if plan.calories - user_requirements['calories'] <= 20:
-            score += 30
+            score += 100
+        elif plan.calories - user_requirements['calories'] <= 40:
+            score += 70
     else:
-        score -= 100
+        score -= 400
 
     if plan.macros['protein'] <= user_requirements['protein']:
         if abs(plan.calories - user_requirements['protein']) <= 4:
@@ -99,73 +104,90 @@ def fitness(plan, user_requirements):
 
 
 # Algorytm genetyczny
-def genetic_algorithm(user_requirements, generations=30000):
+def genetic_algorithm(user_requirements, generations=10000, additional_generations=1000, max_extra_generations=5):
     population = generate_initial_population(user_requirements)
 
     breakfast_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes]
     lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes]
     dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes]
 
-    for generation in range(generations):
-        population.sort(key=lambda x: fitness(x, user_requirements), reverse=True)
-        new_population = population[:30]  # Najlepsze 10 planów
+    extra_generations = 0
 
-        while len(new_population) < 60:
-            parent1, parent2 = random.sample(new_population[:30], 2)
+    while extra_generations <= max_extra_generations:
+        for generation in range(generations):
+            population.sort(key=lambda x: fitness(x, user_requirements), reverse=True)
+            new_population = population[:30]  # Najlepsze 10 planów
 
-            # Zachowanie struktury posiłków: 2 śniadania, 1 obiad, 2 kolacje
-            crossover_breakfasts = random.sample(parent1.breakfast + parent2.breakfast, k=2)
-            crossover_lunch = random.sample(parent1.lunch + parent2.lunch, k=1)
-            crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
+            while len(new_population) < 60:
+                parent1, parent2 = random.sample(new_population[:30], 2)
 
-            while crossover_dinners[0] == crossover_lunch[0]:
+                # Zachowanie struktury posiłków: 2 śniadania, 1 obiad, 2 kolacje
+                crossover_breakfast1 = random.sample(parent1.breakfast1 + parent2.breakfast1, k=1)
+                crossover_breakfast2 = random.sample(parent1.breakfast2 + parent2.breakfast2, k=1)
+                crossover_lunch = random.sample(parent1.lunch + parent2.lunch, k=1)
                 crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
 
-            while crossover_breakfasts[0] == crossover_breakfasts[1]:
-                crossover_breakfasts = random.sample(breakfast_recipes, k=2)
+                while crossover_dinners[0] == crossover_lunch[0]:
+                    crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
 
-            new_population.append(DietPlan(crossover_breakfasts, crossover_lunch, crossover_dinners))
+                while crossover_breakfast1[0] == crossover_breakfast2[0]:
+                    crossover_breakfast1 = random.sample(breakfast_recipes, k=1)
 
-        # Mutacja
-        for plan in new_population:
+                new_population.append(DietPlan(crossover_breakfast1, crossover_breakfast2, crossover_lunch, crossover_dinners))
 
-            if random.random() < 0.1:  # 10% szans na mutację
-                # Mutacja śniadań
-                if random.random() < 0.5:  # 50% szans na mutację śniadania
-                    plan.breakfast[random.randint(0, 1)] = random.choice(breakfast_recipes)
+            # Mutacja
+            for plan in new_population:
+                if random.random() < 0.2:  # 20% szans na mutację
+                    # Mutacja śniadań
+                    if random.random() < 0.5:
+                        plan.breakfast1[0] = random.choice(breakfast_recipes)
+                    if random.random() < 0.5:
+                        plan.breakfast2[0] = random.choice(breakfast_recipes)
 
-                # Mutacja obiadu
-                if random.random() < 0.5:  # 50% szans na mutację obiadu
-                    plan.lunch[0] = random.choice(lunch_recipes)
+                    # Mutacja obiadu
+                    if random.random() < 0.5:
+                        plan.lunch[0] = random.choice(lunch_recipes)
 
-                # Mutacja kolacji
-                if random.random() < 0.5:  # 50% szans na mutację kolacji
-                    plan.dinner[0] = random.choice(dinner_recipes)
+                    # Mutacja kolacji
+                    if random.random() < 0.5:
+                        plan.dinner[0] = random.choice(dinner_recipes)
 
-                while plan.dinner[0] == plan.lunch[0]:
-                    plan.dinner[0] = random.choice(dinner_recipes)
+                    while plan.dinner[0] == plan.lunch[0]:
+                        plan.dinner[0] = random.choice(dinner_recipes)
 
-                # Aktualizacja kalorii i makroskładników po mutacji
-                plan.recipes = plan.breakfast + plan.lunch + plan.dinner
-                plan.calories = sum(recipe['calories'] for recipe in plan.recipes)
-                plan.macros = plan.calculate_macros()
+                    # Aktualizacja kalorii i makroskładników po mutacji
+                    plan.recipes = plan.breakfast1 + plan.breakfast2 + plan.lunch + plan.dinner
+                    plan.calories = sum(recipe['calories'] for recipe in plan.recipes)
+                    plan.macros = plan.calculate_macros()
 
-        population = new_population
+            population = new_population
 
-    #used_recipes.update([r['name'] for r in population[0].recipes])
-    return population[0]
+        best_plan = population[0]
+        calorie_difference = abs(best_plan.calories - user_requirements['calories'])
 
+        if calorie_difference <= 100:
+            # Zwracamy najlepszy plan, jeśli spełnia wymagania kaloryczne z tolerancją 200 kcal
+            print("znaleziono plan")
+            return best_plan
+        else:
+            # Jeśli plan nie spełnia wymagań, generujemy dodatkowe 500 generacji
+            print("nie znaleziono, szukam dalej")
+            generations = additional_generations
+            extra_generations += 1
+
+    # Jeśli nie udało się osiągnąć wymagań po maksymalnej liczbie dodatkowych generacji, zwracamy najlepszy dostępny plan
+    return best_plan
 
 # Przykładowe wymagania użytkownika
 user_requirements = {
-    'calories': 2410,
-    'protein': 151,
-    'carbs': 301,
-    'fats': 67,
+    'calories': 1903,
+    'protein': 119,
+    'carbs': 238,
+    'fats': 53,
     # Dodaj inne wymagania
 }
 
-for _ in range(7):
+for _ in range(11):
     best_plan = genetic_algorithm(user_requirements)
 
     print("Najlepszy plan dietetyczny :")

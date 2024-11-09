@@ -1,7 +1,7 @@
 user_info = {
-    'weight': 89,
-    'height': 179,
-    'age': 22,
+    'weight': 60,
+    'height': 167,
+    'age': 19,
     'gender': 'man',
     'physical_activity_at_work': 1,
     'physical_activity_in_free_time': 1,
