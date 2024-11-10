@@ -2,15 +2,23 @@ import random
 from all_recipes import available_recipes
 
 used_recipes = set()
-# Klasa reprezentująca plan dietetyczny
+
+
 class DietPlan:
-    def __init__(self, breakfast1, breakfast2, lunch, dinner):
+    def __init__(self, breakfast1, breakfast2, lunch, tea, dinner):
         self.breakfast1 = breakfast1
         self.breakfast2 = breakfast2
         self.lunch = lunch
+        self.tea = tea
         self.dinner = dinner
 
-        self.recipes = self.breakfast1 + self.breakfast2 + self.lunch + self.dinner
+        self.calories_breakfast1 = sum(recipe['calories'] for recipe in self.breakfast1)
+        self.calories_breakfast2 = sum(recipe['calories'] for recipe in self.breakfast2)
+        self.calories_lunch = sum(recipe['calories'] for recipe in self.lunch)
+        self.calories_tea = sum(recipe['calories'] for recipe in self.tea)
+        self.calories_dinner = sum(recipe['calories'] for recipe in self.dinner)
+
+        self.recipes = self.breakfast1 + self.breakfast2 + self.lunch + self.tea + self.dinner
         self.calories = sum(recipe['calories'] for recipe in self.recipes)
         self.macros = self.calculate_macros()
 
@@ -22,8 +30,7 @@ class DietPlan:
         return total_macros
 
 
-# Generowanie początkowej populacji
-def generate_initial_population(user_requirements, size=20000):
+def generate_initial_population(user_requirements, size=30000):
     population = []
 
     breakfast_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes]
@@ -35,77 +42,101 @@ def generate_initial_population(user_requirements, size=20000):
         selected_breakfast1 = random.sample([r for r in breakfast_recipes if r['name'] not in used_recipes], k=1)
         selected_breakfast2 = random.sample([r for r in breakfast_recipes if r['name'] not in used_recipes], k=1)
         selected_lunch = random.sample([r for r in lunch_recipes if r['name'] not in used_recipes], k=1)
+        selected_tea = random.sample([r for r in breakfast_recipes if r['name'] not in used_recipes], k=1)
         selected_dinner = random.sample([r for r in dinner_recipes if r['name'] not in used_recipes], k=1)
 
         while selected_dinner[0] == selected_lunch[0]:
             selected_dinner = random.sample(dinner_recipes, k=1)
 
-        # Tworzenie obiektu DietPlan z podziałem na posiłki
         diet_plan = DietPlan(
             breakfast1=selected_breakfast1,
             breakfast2=selected_breakfast2,
             lunch=selected_lunch,
+            tea=selected_tea,
             dinner=selected_dinner
         )
 
-        # Dodaj plan do populacji
         population.append(diet_plan)
 
     return population
 
-# Funkcja dopasowania
+
 def fitness(plan, user_requirements):
     score = 0
-    # Przykład: dodaj punkty za kalorie i makroskładniki
-    if plan.calories <= user_requirements['calories']:
-        if plan.calories - user_requirements['calories'] <= 20:
-            score += 100
-        elif plan.calories - user_requirements['calories'] <= 40:
-            score += 70
+
+    # 1. Punkty za ogólną zgodność kaloryczną
+    calorie_diff = abs(plan.calories - user_requirements['calories'])
+    if calorie_diff <= 20:
+        score += 120
+    elif calorie_diff <= 50:
+        score += 80
+    elif calorie_diff <= 100:
+        score += 50
     else:
-        score -= 400
+        score -= calorie_diff * 2
 
-    if plan.macros['protein'] <= user_requirements['protein']:
-        if abs(plan.calories - user_requirements['protein']) <= 4:
-            score += 100
-        elif abs(plan.calories - user_requirements['protein']) <= 8:
-            score += 50
-        elif abs(plan.calories - user_requirements['protein']) <= 12:
-            score += 25
-        elif abs(plan.calories - user_requirements['protein']) <= 16:
-            score -= 50
-        else:
-            score -= 100
+    # 2. Punkty za białko
+    protein_diff = abs(plan.macros['protein'] - user_requirements['protein'])
+    if protein_diff <= 4:
+        score += 125
+    elif protein_diff <= 8:
+        score += 75
+    elif protein_diff <= 12:
+        score += 40
+    else:
+        score -= protein_diff * 2
 
-    if plan.macros['carbs'] <= user_requirements['carbs']:
-        if abs(plan.calories - user_requirements['carbs']) <= 4:
-            score += 100
-        elif abs(plan.calories - user_requirements['carbs']) <= 8:
-            score += 50
-        elif abs(plan.calories - user_requirements['carbs']) <= 12:
-            score += 25
-        else:
-            score -= 100
+    # 3. Punkty za węglowodany
+    carb_diff = abs(plan.macros['carbs'] - user_requirements['carbs'])
+    if carb_diff <= 4:
+        score += 125
+    elif carb_diff <= 8:
+        score += 75
+    elif carb_diff <= 12:
+        score += 40
+    else:
+        score -= carb_diff * 2
 
-    if plan.macros['fats'] <= user_requirements['fats']:
-        if abs(plan.calories - user_requirements['fats']) <= 4:
-            score += 100
-        elif abs(plan.calories - user_requirements['fats']) <= 8:
-            score += 50
-        elif abs(plan.calories - user_requirements['fats']) <= 12:
-            score += 25
-        else:
-            score -= 10
+    # 4. Punkty za tłuszcze
+    fat_diff = abs(plan.macros['fats'] - user_requirements['fats'])
+    if fat_diff <= 4:
+        score += 125
+    elif fat_diff <= 8:
+        score += 75
+    elif fat_diff <= 12:
+        score += 40
+    else:
+        score -= fat_diff * 2
 
-    if plan.macros['fats'] < 30:
-        score -= 50
+    # 5. Procentowy rozkład kaloryczności posiłków
+    if 0.18 <= plan.calories_breakfast1 / user_requirements['calories'] <= 0.22:
+        score += 80
+    if 0.10 <= plan.calories_breakfast2 / user_requirements['calories'] <= 0.12:
+        score += 50
+    if 0.30 <= plan.calories_lunch / user_requirements['calories'] <= 0.35:
+        score += 80
+    if 0.10 <= plan.calories_tea / user_requirements['calories'] <= 0.15:
+        score += 50
+    if 0.25 <= plan.calories_dinner / user_requirements['calories'] <= 0.30:
+        score += 80
+
+    # 6. Zmienność posiłków
+    unique_meals = len(set([recipe['name'] for recipe in plan.recipes]))
+    score += unique_meals * 10
+
+    # 7. Wprowadzenie współczynnika zgodności
+    total_match_ratio = (1 - calorie_diff / user_requirements['calories']) * 100
+    score += total_match_ratio
 
     return score
 
 
 # Algorytm genetyczny
-def genetic_algorithm(user_requirements, generations=10000, additional_generations=1000, max_extra_generations=5):
-    population = generate_initial_population(user_requirements)
+def genetic_algorithm(user_requirements, generations=30000, additional_generations=5000, max_extra_generations=4):
+    def generate_population():
+        return generate_initial_population(user_requirements)
+
+    population = generate_population()
 
     breakfast_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes]
     lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes]
@@ -116,15 +147,15 @@ def genetic_algorithm(user_requirements, generations=10000, additional_generatio
     while extra_generations <= max_extra_generations:
         for generation in range(generations):
             population.sort(key=lambda x: fitness(x, user_requirements), reverse=True)
-            new_population = population[:30]  # Najlepsze 10 planów
+            new_population = population[:30]
 
             while len(new_population) < 60:
                 parent1, parent2 = random.sample(new_population[:30], 2)
 
-                # Zachowanie struktury posiłków: 2 śniadania, 1 obiad, 2 kolacje
                 crossover_breakfast1 = random.sample(parent1.breakfast1 + parent2.breakfast1, k=1)
                 crossover_breakfast2 = random.sample(parent1.breakfast2 + parent2.breakfast2, k=1)
                 crossover_lunch = random.sample(parent1.lunch + parent2.lunch, k=1)
+                crossover_tea = random.sample(parent1.tea + parent2.tea, k=1)
                 crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
 
                 while crossover_dinners[0] == crossover_lunch[0]:
@@ -133,22 +164,18 @@ def genetic_algorithm(user_requirements, generations=10000, additional_generatio
                 while crossover_breakfast1[0] == crossover_breakfast2[0]:
                     crossover_breakfast1 = random.sample(breakfast_recipes, k=1)
 
-                new_population.append(DietPlan(crossover_breakfast1, crossover_breakfast2, crossover_lunch, crossover_dinners))
+                new_population.append(DietPlan(crossover_breakfast1, crossover_breakfast2, crossover_lunch, crossover_tea, crossover_dinners))
 
-            # Mutacja
             for plan in new_population:
-                if random.random() < 0.2:  # 20% szans na mutację
-                    # Mutacja śniadań
+                if random.random() < 0.2:
                     if random.random() < 0.5:
                         plan.breakfast1[0] = random.choice(breakfast_recipes)
                     if random.random() < 0.5:
                         plan.breakfast2[0] = random.choice(breakfast_recipes)
-
-                    # Mutacja obiadu
                     if random.random() < 0.5:
                         plan.lunch[0] = random.choice(lunch_recipes)
-
-                    # Mutacja kolacji
+                    if random.random() < 0.5:
+                        plan.tea[0] = random.choice(breakfast_recipes)
                     if random.random() < 0.5:
                         plan.dinner[0] = random.choice(dinner_recipes)
 
@@ -156,26 +183,34 @@ def genetic_algorithm(user_requirements, generations=10000, additional_generatio
                         plan.dinner[0] = random.choice(dinner_recipes)
 
                     # Aktualizacja kalorii i makroskładników po mutacji
-                    plan.recipes = plan.breakfast1 + plan.breakfast2 + plan.lunch + plan.dinner
+                    plan.recipes = plan.breakfast1 + plan.breakfast2 + plan.lunch + plan.tea + plan.dinner
                     plan.calories = sum(recipe['calories'] for recipe in plan.recipes)
                     plan.macros = plan.calculate_macros()
 
             population = new_population
 
         best_plan = population[0]
-        calorie_difference = abs(best_plan.calories - user_requirements['calories'])
 
-        if calorie_difference <= 100:
-            # Zwracamy najlepszy plan, jeśli spełnia wymagania kaloryczne z tolerancją 200 kcal
-            print("znaleziono plan")
+        calories_difference = abs(best_plan.calories - user_requirements['calories'])
+        protein_difference = abs(best_plan.macros['protein'] - user_requirements['protein'])
+        carbs_difference = abs(best_plan.macros['carbs'] - user_requirements['carbs'])
+        fats_difference = abs(best_plan.macros['fats'] - user_requirements['fats'])
+
+        if (calories_difference <= 70 and protein_difference <= 15 and carbs_difference <= 20 and fats_difference <= 10
+                and best_plan.calories_lunch > best_plan.calories_breakfast1 and best_plan.calories_lunch > best_plan.calories_dinner):
+            print("Znaleziono plan")
             return best_plan
         else:
-            # Jeśli plan nie spełnia wymagań, generujemy dodatkowe 500 generacji
-            print("nie znaleziono, szukam dalej")
+            print("Nie znaleziono, szukam dalej")
             generations = additional_generations
             extra_generations += 1
 
-    # Jeśli nie udało się osiągnąć wymagań po maksymalnej liczbie dodatkowych generacji, zwracamy najlepszy dostępny plan
+        if extra_generations > max_extra_generations:
+            print("Nie znaleziono odpowiedniego planu, resetowanie populacji...")
+            population = generate_population()
+            extra_generations = 0
+            generations = 30000
+
     return best_plan
 
 # Przykładowe wymagania użytkownika
@@ -184,16 +219,23 @@ user_requirements = {
     'protein': 119,
     'carbs': 238,
     'fats': 53,
-    # Dodaj inne wymagania
 }
 
-for _ in range(11):
+for _ in range(3):
     best_plan = genetic_algorithm(user_requirements)
 
     print("Najlepszy plan dietetyczny :")
     for recipe in best_plan.recipes:
         print(recipe['name'])
+    print()
     print("Kalorie:", best_plan.calories)
+    print()
+    print("Kalorie sniadania:", best_plan.calories_breakfast1)
+    print("Kalorie sniadania2:", best_plan.calories_breakfast2)
+    print("Kalorie obiad:", best_plan.calories_lunch)
+    print("Kalorie podw:", best_plan.calories_tea)
+    print("Kalorie kolacja:", best_plan.calories_dinner)
+    print()
     print("Makroskładniki:", best_plan.macros)
     #   print(used_recipes)
     print()
