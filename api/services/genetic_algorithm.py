@@ -4,6 +4,23 @@ from all_recipes import available_recipes
 used_recipes = set()
 
 
+user_requirements = {
+    'calories': 1903,
+    'protein': 119,
+    'carbs': 238,
+    'fats': 53,
+    'required_lunch': [
+
+    ],
+    'unwanted_ingredients': [
+        'mleko',
+        'tofu'
+    ]
+}
+
+required_lunch = user_requirements['required_lunch']
+unwanted_ingredients = user_requirements['unwanted_ingredients']
+
 class DietPlan:
     def __init__(self, breakfast1, breakfast2, lunch, tea, dinner):
         self.breakfast1 = breakfast1
@@ -33,17 +50,22 @@ class DietPlan:
 def generate_initial_population(user_requirements, size=30000):
     population = []
 
-    breakfast_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes]
-    lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes]
-    dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes]
+    if required_lunch:
+        lunch_recipes = [recipe for recipe in available_recipes if recipe['name'] in required_lunch]
+    else:
+        lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+
+    breakfast_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+
+    dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
 
     for _ in range(size):
 
-        selected_breakfast1 = random.sample([r for r in breakfast_recipes if r['name'] not in used_recipes], k=1)
-        selected_breakfast2 = random.sample([r for r in breakfast_recipes if r['name'] not in used_recipes], k=1)
-        selected_lunch = random.sample([r for r in lunch_recipes if r['name'] not in used_recipes], k=1)
-        selected_tea = random.sample([r for r in breakfast_recipes if r['name'] not in used_recipes], k=1)
-        selected_dinner = random.sample([r for r in dinner_recipes if r['name'] not in used_recipes], k=1)
+        selected_breakfast1 = random.sample(breakfast_recipes, k=1)
+        selected_breakfast2 = random.sample(breakfast_recipes, k=1)
+        selected_lunch = random.sample(lunch_recipes, k=1)
+        selected_tea = random.sample(breakfast_recipes, k=1)
+        selected_dinner = random.sample(dinner_recipes, k=1)
 
         while selected_dinner[0] == selected_lunch[0]:
             selected_dinner = random.sample(dinner_recipes, k=1)
@@ -138,9 +160,13 @@ def genetic_algorithm(user_requirements, generations=30000, additional_generatio
 
     population = generate_population()
 
-    breakfast_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes]
-    lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes]
-    dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes]
+    if required_lunch:
+        lunch_recipes = [recipe for recipe in available_recipes if recipe['name'] in required_lunch]
+    else:
+        lunch_recipes = [recipe for recipe in available_recipes if'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+
+    breakfast_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+    dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
 
     extra_generations = 0
 
@@ -212,14 +238,6 @@ def genetic_algorithm(user_requirements, generations=30000, additional_generatio
             generations = 30000
 
     return best_plan
-
-# Przykładowe wymagania użytkownika
-user_requirements = {
-    'calories': 1903,
-    'protein': 119,
-    'carbs': 238,
-    'fats': 53,
-}
 
 for _ in range(3):
     best_plan = genetic_algorithm(user_requirements)
