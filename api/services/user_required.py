@@ -1,10 +1,10 @@
 user_info = {
-    'weight': 60,
-    'height': 167,
-    'age': 19,
+    'weight': 87,
+    'height': 179,
+    'age': 22,
     'gender': 'man',
-    'physical_activity_at_work': 1,
-    'physical_activity_in_free_time': 1,
+    'physical_activity_at_work': 0,
+    'physical_activity_in_free_time': 2,
     'objective': 'less',
 }
 
@@ -36,11 +36,11 @@ def calculate_calories(user_info):
     total_calories = round(bmr * activity_factors[activity_free_time][activity_work])
 
     if objective == 'less':
-        total_calories = total_calories - 350
+        total_calories = total_calories - 300
     elif objective == 'same':
         total_calories = total_calories
     elif objective == 'more':
-        total_calories = total_calories + 350
+        total_calories = total_calories + 300
 
     return total_calories
 

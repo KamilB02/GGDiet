@@ -5,7 +5,7 @@ from rest_framework import serializers
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInfo
-        fields = ['weight', 'height']
+        fields = ['weight', 'height', 'gender', 'physical_activity_at_work', 'physical_activity_in_free_time', 'objective']
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

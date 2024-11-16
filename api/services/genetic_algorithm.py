@@ -9,22 +9,30 @@ user_requirements = {
     'protein': 119,
     'carbs': 238,
     'fats': 53,
-    'required_lunch': [
 
-    ],
+    'required_breakfast1': [],
+    'required_breakfast2': [],
+    'required_lunch': [],
+    'required_tea': [],
+    'required_dinner': [],
+
     'unwanted_ingredients': [
         'mleko',
         'tofu'
     ]
 }
 
+required_breakfast1 = user_requirements['required_breakfast1']
+required_breakfast2 = user_requirements['required_breakfast2']
 required_lunch = user_requirements['required_lunch']
+required_tea = user_requirements['required_tea']
+required_dinner = user_requirements['required_dinner']
 unwanted_ingredients = user_requirements['unwanted_ingredients']
 
 class DietPlan:
     def __init__(self, breakfast1, breakfast2, lunch, tea, dinner):
         self.breakfast1 = breakfast1
-        self.breakfast2 = breakfast2
+        self.breakfast1 = breakfast2
         self.lunch = lunch
         self.tea = tea
         self.dinner = dinner
@@ -47,7 +55,7 @@ class DietPlan:
         return total_macros
 
 
-def generate_initial_population(user_requirements, size=3000):
+def generate_initial_population(user_requirements, size=60000):
     population = []
 
     if required_lunch:
@@ -55,20 +63,36 @@ def generate_initial_population(user_requirements, size=3000):
     else:
         lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
 
-    breakfast_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+    if required_breakfast1:
+        breakfast1_recipes = [recipe for recipe in available_recipes if recipe['name'] in required_breakfast1]
+    else:
+        breakfast1_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+
+    breakfast2_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+
+    tea_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
 
     dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
 
     for _ in range(size):
 
-        selected_breakfast1 = random.sample(breakfast_recipes, k=1)
-        selected_breakfast2 = random.sample(breakfast_recipes, k=1)
+        selected_breakfast1 = random.sample(breakfast1_recipes, k=1)
+        selected_breakfast2 = random.sample(breakfast2_recipes, k=1)
         selected_lunch = random.sample(lunch_recipes, k=1)
-        selected_tea = random.sample(breakfast_recipes, k=1)
+        selected_tea = random.sample(tea_recipes, k=1)
         selected_dinner = random.sample(dinner_recipes, k=1)
 
         while selected_dinner[0] == selected_lunch[0]:
-            selected_dinner = random.sample(dinner_recipes, k=1)
+            if random.random() < 0.5:
+                selected_dinner = random.sample(dinner_recipes, k=1)
+            else:
+                selected_lunch = random.sample(lunch_recipes, k=1)
+
+        while selected_breakfast1[0] == selected_breakfast2[0]:
+            if random.random() < 0.5:
+                selected_breakfast2 = random.sample(breakfast2_recipes, k=1)
+            else:
+                selected_breakfast1 = random.sample(breakfast1_recipes, k=1)
 
         diet_plan = DietPlan(
             breakfast1=selected_breakfast1,
@@ -163,9 +187,11 @@ def genetic_algorithm(user_requirements, generations=5000, additional_generation
     if required_lunch:
         lunch_recipes = [recipe for recipe in available_recipes if recipe['name'] in required_lunch]
     else:
-        lunch_recipes = [recipe for recipe in available_recipes if'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+        lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
 
-    breakfast_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+    breakfast1_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+    breakfast2_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+    tea_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
     dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
 
     extra_generations = 0
@@ -185,23 +211,29 @@ def genetic_algorithm(user_requirements, generations=5000, additional_generation
                 crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
 
                 while crossover_dinners[0] == crossover_lunch[0]:
-                    crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
+                    if parent1.dinner == parent2.dinner:
+                        crossover_lunch = random.sample(parent1.lunch + parent2.lunch, k=1)
+                    else:
+                        crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
 
                 while crossover_breakfast1[0] == crossover_breakfast2[0]:
-                    crossover_breakfast1 = random.sample(breakfast_recipes, k=1)
+                    if parent1.breakfast1 == parent2.breakfast1:
+                        crossover_breakfast2 = random.sample(parent1.breakfast2 + parent2.breakfast2, k=1)
+                    else:
+                        crossover_breakfast1 = random.sample(parent1.breakfast1 + parent2.breakfast1, k=1)
 
                 new_population.append(DietPlan(crossover_breakfast1, crossover_breakfast2, crossover_lunch, crossover_tea, crossover_dinners))
 
             for plan in new_population:
                 if random.random() < 0.2:
                     if random.random() < 0.5:
-                        plan.breakfast1[0] = random.choice(breakfast_recipes)
+                        plan.breakfast1[0] = random.choice(breakfast1_recipes)
                     if random.random() < 0.5:
-                        plan.breakfast2[0] = random.choice(breakfast_recipes)
+                        plan.breakfast2[0] = random.choice(breakfast2_recipes)
                     if random.random() < 0.5:
                         plan.lunch[0] = random.choice(lunch_recipes)
                     if random.random() < 0.5:
-                        plan.tea[0] = random.choice(breakfast_recipes)
+                        plan.tea[0] = random.choice(tea_recipes)
                     if random.random() < 0.5:
                         plan.dinner[0] = random.choice(dinner_recipes)
 
@@ -239,24 +271,24 @@ def genetic_algorithm(user_requirements, generations=5000, additional_generation
 
     return best_plan
 
-#best_plan = genetic_algorithm(user_requirements)
+for _ in range(3):
+    best_plan = genetic_algorithm(user_requirements)
 
-#print("Najlepszy plan dietetyczny :")
-#for recipe in best_plan.recipes:
-#    print(recipe['name'])
-
-#print()
-#print("Kalorie:", best_plan.calories)
-#print()
-#print("Kalorie sniadania:", best_plan.calories_breakfast1)
-#print("Kalorie sniadania2:", best_plan.calories_breakfast2)
-#print("Kalorie obiad:", best_plan.calories_lunch)
-#print("Kalorie podw:", best_plan.calories_tea)
-#print("Kalorie kolacja:", best_plan.calories_dinner)
-#print()
-#print("Makroskładniki:", best_plan.macros)
-#   print(used_recipes)
-#print()
+    print("Najlepszy plan dietetyczny :")
+    for recipe in best_plan.recipes:
+        print(recipe['name'])
+    print()
+    print("Kalorie:", best_plan.calories)
+    print()
+    print("Kalorie sniadania:", best_plan.calories_breakfast1)
+    print("Kalorie sniadania2:", best_plan.calories_breakfast2)
+    print("Kalorie obiad:", best_plan.calories_lunch)
+    print("Kalorie podw:", best_plan.calories_tea)
+    print("Kalorie kolacja:", best_plan.calories_dinner)
+    print()
+    print("Makroskładniki:", best_plan.macros)
+    print(used_recipes)
+    print()
 
 
 
