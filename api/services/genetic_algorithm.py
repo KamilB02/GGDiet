@@ -1,5 +1,5 @@
 import random
-from all_recipes import available_recipes
+from api.services.all_recipes import available_recipes
 
 used_recipes = set()
 
@@ -47,7 +47,7 @@ class DietPlan:
         return total_macros
 
 
-def generate_initial_population(user_requirements, size=30000):
+def generate_initial_population(user_requirements, size=3000):
     population = []
 
     if required_lunch:
@@ -154,7 +154,7 @@ def fitness(plan, user_requirements):
 
 
 # Algorytm genetyczny
-def genetic_algorithm(user_requirements, generations=30000, additional_generations=5000, max_extra_generations=4):
+def genetic_algorithm(user_requirements, generations=5000, additional_generations=5000, max_extra_generations=4):
     def generate_population():
         return generate_initial_population(user_requirements)
 
@@ -235,28 +235,28 @@ def genetic_algorithm(user_requirements, generations=30000, additional_generatio
             print("Nie znaleziono odpowiedniego planu, resetowanie populacji...")
             population = generate_population()
             extra_generations = 0
-            generations = 30000
+            generations = 5000
 
     return best_plan
 
-for _ in range(3):
-    best_plan = genetic_algorithm(user_requirements)
+#best_plan = genetic_algorithm(user_requirements)
 
-    print("Najlepszy plan dietetyczny :")
-    for recipe in best_plan.recipes:
-        print(recipe['name'])
-    print()
-    print("Kalorie:", best_plan.calories)
-    print()
-    print("Kalorie sniadania:", best_plan.calories_breakfast1)
-    print("Kalorie sniadania2:", best_plan.calories_breakfast2)
-    print("Kalorie obiad:", best_plan.calories_lunch)
-    print("Kalorie podw:", best_plan.calories_tea)
-    print("Kalorie kolacja:", best_plan.calories_dinner)
-    print()
-    print("Makroskładniki:", best_plan.macros)
-    #   print(used_recipes)
-    print()
+#print("Najlepszy plan dietetyczny :")
+#for recipe in best_plan.recipes:
+#    print(recipe['name'])
+
+#print()
+#print("Kalorie:", best_plan.calories)
+#print()
+#print("Kalorie sniadania:", best_plan.calories_breakfast1)
+#print("Kalorie sniadania2:", best_plan.calories_breakfast2)
+#print("Kalorie obiad:", best_plan.calories_lunch)
+#print("Kalorie podw:", best_plan.calories_tea)
+#print("Kalorie kolacja:", best_plan.calories_dinner)
+#print()
+#print("Makroskładniki:", best_plan.macros)
+#   print(used_recipes)
+#print()
 
 
 

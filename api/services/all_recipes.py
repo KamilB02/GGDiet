@@ -1,3 +1,6 @@
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 available_recipes = [
     {'name': 'Sałatka z kurczakiem', 'calories': 400, 'macros': {'protein': 30, 'carbs': 20, 'fats': 15},
      'meal_type': ['lunch', 'dinner'], 'ingredients': ['kurczak', 'sałata', 'ogórek', 'pomidor', 'sos vinaigrette']},
@@ -529,3 +532,7 @@ available_recipes = [
      'ingredients': ['chleb pełnoziarnisty', 'jajko', 'awokado', 'oliwa z oliwek', 'sól', 'pieprz']},
 
 ]
+
+class AllRecipesView(APIView):
+    def get(self, request):
+        return Response(available_recipes)
