@@ -6,6 +6,7 @@ const UserInfoForm = () => {
     const [formData, setFormData] = useState({
         weight: '',
         height: '',
+        age: '',
         gender: '',
         physical_activity_at_work: '',
         physical_activity_in_free_time: '',
@@ -62,6 +63,16 @@ const UserInfoForm = () => {
                         type="number"
                         name="height"
                         value={formData.height}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Wiek:</label>
+                    <input
+                        type="number"
+                        name="age"
+                        value={formData.age}
                         onChange={handleChange}
                         required
                     />

@@ -69,9 +69,9 @@ def calculate_macro(user_info):
     return protein, carbs, fats
 
 
-daily_calories = calculate_calories(user_info)
-daily_macro = calculate_macro(user_info)
-print("Dzienne zapotrzebowanie kaloryczne wynosi:", daily_calories, "kcal")
-print("Dzienne zapotrzebowanie protein:", daily_macro[0], "g")
-print("Dzienne zapotrzebowanie carbs:", daily_macro[1], "g")
-print("Dzienne zapotrzebowanie fats:", daily_macro[2], "g")
+# daily_calories = calculate_calories(user_info)
+# daily_macro = calculate_macro(user_info)
+# print("Dzienne zapotrzebowanie kaloryczne wynosi:", daily_calories, "kcal")
+# print("Dzienne zapotrzebowanie protein:", daily_macro[0], "g")
+# print("Dzienne zapotrzebowanie carbs:", daily_macro[1], "g")
+# print("Dzienne zapotrzebowanie fats:", daily_macro[2], "g")

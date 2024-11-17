@@ -63,27 +63,27 @@ function DietPlanForm() {
         setMealPreferences({ ...mealPreferences, [name]: value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const preferences = {
-            avoidedIngredients,
-            mealPreferences
-        };
-
-        try {
-            const token = localStorage.getItem('access_token');
-            const response = await axios.post('http://localhost:8000/api/generate_diet/', preferences, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
-            console.log('Diet generated:', response.data);
-            // Przekierowanie na stronę wyników diety
-            navigate('/diet-result', { state: { diet: response.data } });
-        } catch (error) {
-            console.error('Error generating diet:', error);
-            alert('Wystąpił błąd podczas generowania diety.');
-        }
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    const preferences = {
+        avoidedIngredients,
+        mealPreferences
     };
+
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await axios.post('http://localhost:8000/api/generate-diet/', preferences, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        console.log('Diet generated:', response.data); // Sprawdzanie odpowiedzi
+        navigate('/diet-result', { state: { diet: response.data } });
+    } catch (error) {
+        console.error('Error generating diet:', error);
+        alert('Wystąpił błąd podczas generowania diety.');
+    }
+};
+
 
     // Generowanie listy składników i nazw potraw na podstawie `all_recipes`
     const allIngredients = Array.from(

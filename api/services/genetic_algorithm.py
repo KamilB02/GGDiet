@@ -1,38 +1,43 @@
 import random
 from api.services.all_recipes import available_recipes
-
+from api.serializers import DietPlanSerializer
 used_recipes = set()
 
 
-user_requirements = {
-    'calories': 1903,
-    'protein': 119,
-    'carbs': 238,
-    'fats': 53,
+# user_requirements = {
+#     'calories': 1903,
+#     'protein': 119,
+#     'carbs': 238,
+#     'fats': 53,
+#
+#     'required_breakfast1': [],
+#     'required_breakfast2': [],
+#     'required_lunch': [],
+#     'required_tea': [],
+#     'required_dinner': [],
+#
+#     'unwanted_ingredients': [
+#         'mleko',
+#         'tofu'
+#     ]
+# }
+def prepare_user_requirements(preferences):
+    # Przygotowanie słownika z wymaganiami użytkownika
+    user_requirements = {
+        'calories': preferences['calories'],
+        'protein': preferences['protein'],
+        'carbs': preferences['carbs'],
+        'fats': preferences['fats'],
+        'unwanted_ingredients': preferences['avoidedIngredients']
+    }
 
-    'required_breakfast1': [],
-    'required_breakfast2': [],
-    'required_lunch': [],
-    'required_tea': [],
-    'required_dinner': [],
+    return user_requirements
 
-    'unwanted_ingredients': [
-        'mleko',
-        'tofu'
-    ]
-}
-
-required_breakfast1 = user_requirements['required_breakfast1']
-required_breakfast2 = user_requirements['required_breakfast2']
-required_lunch = user_requirements['required_lunch']
-required_tea = user_requirements['required_tea']
-required_dinner = user_requirements['required_dinner']
-unwanted_ingredients = user_requirements['unwanted_ingredients']
 
 class DietPlan:
     def __init__(self, breakfast1, breakfast2, lunch, tea, dinner):
         self.breakfast1 = breakfast1
-        self.breakfast1 = breakfast2
+        self.breakfast2 = breakfast2
         self.lunch = lunch
         self.tea = tea
         self.dinner = dinner
@@ -53,26 +58,38 @@ class DietPlan:
             for macro, value in recipe['macros'].items():
                 total_macros[macro] += value
         return total_macros
+    def to_dict(self):
+            # Zwrócenie danych w formie słownika
+        return {
+                'breakfast1': self.breakfast1,
+                'breakfast2': self.breakfast2,
+                'lunch': self.lunch,
+                'tea': self.tea,
+                'dinner': self.dinner,
+                'calories_breakfast1': self.calories_breakfast1,
+                'calories_breakfast2': self.calories_breakfast2,
+                'calories_lunch': self.calories_lunch,
+                'calories_tea': self.calories_tea,
+                'calories_dinner': self.calories_dinner,
+                'calories_total': self.calories,
+                'macros': self.macros
+            }
+
+def generate_initial_population(user_requirements, size=100000):
 
 
-def generate_initial_population(user_requirements, size=60000):
+
     population = []
 
-    if required_lunch:
-        lunch_recipes = [recipe for recipe in available_recipes if recipe['name'] in required_lunch]
-    else:
-        lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+    lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
 
-    if required_breakfast1:
-        breakfast1_recipes = [recipe for recipe in available_recipes if recipe['name'] in required_breakfast1]
-    else:
-        breakfast1_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+    breakfast1_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients']) ]
 
-    breakfast2_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+    breakfast2_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
 
-    tea_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+    tea_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
 
-    dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+    dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
 
     for _ in range(size):
 
@@ -184,15 +201,13 @@ def genetic_algorithm(user_requirements, generations=5000, additional_generation
 
     population = generate_population()
 
-    if required_lunch:
-        lunch_recipes = [recipe for recipe in available_recipes if recipe['name'] in required_lunch]
-    else:
-        lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+    print(user_requirements)
 
-    breakfast1_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
-    breakfast2_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
-    tea_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
-    dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in unwanted_ingredients for ingredient in recipe['ingredients'])]
+    lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
+    breakfast1_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
+    breakfast2_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
+    tea_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
+    dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
 
     extra_generations = 0
 
@@ -257,7 +272,25 @@ def genetic_algorithm(user_requirements, generations=5000, additional_generation
         if (calories_difference <= 70 and protein_difference <= 15 and carbs_difference <= 20 and fats_difference <= 10
                 and best_plan.calories_lunch > best_plan.calories_breakfast1 and best_plan.calories_lunch > best_plan.calories_dinner):
             print("Znaleziono plan")
-            return best_plan
+            print("Najlepszy plan dietetyczny :")
+            for recipe in best_plan.recipes:
+                print(recipe['name'])
+                used_recipes.add(recipe['name'])
+            print()
+            print("Kalorie:", best_plan.calories)
+            print()
+            print("Kalorie sniadania:", best_plan.calories_breakfast1)
+            print("Kalorie sniadania2:", best_plan.calories_breakfast2)
+            print("Kalorie obiad:", best_plan.calories_lunch)
+            print("Kalorie podw:", best_plan.calories_tea)
+            print("Kalorie kolacja:", best_plan.calories_dinner)
+            print()
+            print("Makroskładniki:", best_plan.macros)
+
+            print(used_recipes)
+            print()
+
+            return best_plan.to_dict()
         else:
             print("Nie znaleziono, szukam dalej")
             generations = additional_generations
@@ -269,26 +302,26 @@ def genetic_algorithm(user_requirements, generations=5000, additional_generation
             extra_generations = 0
             generations = 5000
 
-    return best_plan
+    return None
 
-for _ in range(3):
-    best_plan = genetic_algorithm(user_requirements)
-
-    print("Najlepszy plan dietetyczny :")
-    for recipe in best_plan.recipes:
-        print(recipe['name'])
-    print()
-    print("Kalorie:", best_plan.calories)
-    print()
-    print("Kalorie sniadania:", best_plan.calories_breakfast1)
-    print("Kalorie sniadania2:", best_plan.calories_breakfast2)
-    print("Kalorie obiad:", best_plan.calories_lunch)
-    print("Kalorie podw:", best_plan.calories_tea)
-    print("Kalorie kolacja:", best_plan.calories_dinner)
-    print()
-    print("Makroskładniki:", best_plan.macros)
-    print(used_recipes)
-    print()
+# for _ in range(3):
+#     best_plan = genetic_algorithm(user_requirements)
+#
+#     print("Najlepszy plan dietetyczny :")
+#     for recipe in best_plan.recipes:
+#         print(recipe['name'])
+#     print()
+#     print("Kalorie:", best_plan.calories)
+#     print()
+#     print("Kalorie sniadania:", best_plan.calories_breakfast1)
+#     print("Kalorie sniadania2:", best_plan.calories_breakfast2)
+#     print("Kalorie obiad:", best_plan.calories_lunch)
+#     print("Kalorie podw:", best_plan.calories_tea)
+#     print("Kalorie kolacja:", best_plan.calories_dinner)
+#     print()
+#     print("Makroskładniki:", best_plan.macros)
+#     print(used_recipes)
+#     print()
 
 
 
