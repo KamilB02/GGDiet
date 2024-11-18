@@ -170,6 +170,7 @@ const mealsByType = (type) => {
 
                 <button type="submit">Generuj dietę</button>
             </form>
+          <button onClick={() => navigate('/userinfo')}>Uzupełnij dane</button>
         </div>
     );
 }

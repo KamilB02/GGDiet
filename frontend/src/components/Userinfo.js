@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,6 +13,24 @@ const UserInfoForm = () => {
         objective: '',
     });
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // Pobranie danych użytkownika przy załadowaniu komponentu
+        const fetchUserInfo = async () => {
+            const token = localStorage.getItem('access_token');
+            try {
+                const response = await axios.get('http://localhost:8000/api/user-info/', {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Token w nagłówku
+                    },
+                });
+                setFormData(response.data); // Ustawienie danych w formularzu
+            } catch (error) {
+                console.error('Błąd podczas pobierania danych użytkownika:', error);
+            }
+        };
+        fetchUserInfo();
+    }, []);
 
     // Obsługa zmian w formularzu
     const handleChange = (e) => {
@@ -31,7 +49,7 @@ const UserInfoForm = () => {
         try {
             const response = await axios.post('http://localhost:8000/api/user-info/', formData, {
                 headers: {
-                    Authorization: `Bearer ${token}`, // Wysyłanie tokenu w nagłówkach
+                    Authorization: `Bearer ${token}`, // Token w nagłówkach
                 },
             });
             console.log(response.data);
@@ -136,12 +154,6 @@ const UserInfoForm = () => {
                     </select>
                 </div>
                 <button type="submit">Zatwierdź</button>
-                <button
-                    type="button"
-                    onClick={() => navigate('/dietplan')}
-                >
-                    Anuluj
-                </button>
             </form>
         </div>
     );

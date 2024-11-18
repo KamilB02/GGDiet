@@ -54,6 +54,15 @@ class RegisterView(APIView):
 class UserInfoView(APIView):
     permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        user = request.user
+        try:
+            # Pobranie informacji o użytkowniku
+            user_info = UserInfo.objects.get(user=user)
+            serializer = UserInfoSerializer(user_info)
+            return Response(serializer.data, status=200)
+        except UserInfo.DoesNotExist:
+            return Response({"message": "Nie znaleziono informacji o użytkowniku."}, status=404)
     def post(self, request):
         user = request.user
         data = request.data
