@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.decorators import api_view, permission_classes
-from .services.genetic_algorithm import genetic_algorithm, prepare_user_requirements
+from .services.genetic_algorithm import genetic_algorithm, prepare_user_requirements, used_recipes
 from .services.user_required import calculate_macro, calculate_calories
 from rest_framework_simplejwt.views import TokenObtainPairView
 import logging
@@ -122,6 +122,6 @@ class GenerateDietView(APIView):
             diet_plans.append(diet_plan)
 
         print("Generated diet plans:", diet_plans)
-
+        used_recipes.clear()
         # Zwrócenie wygenerowanej diety
-        return JsonResponse({'diet_plans': diet_plans}, status=status.HTTP_200_OK)
+        return JsonResponse( diet_plan, status=status.HTTP_200_OK)
