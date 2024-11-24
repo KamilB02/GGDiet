@@ -14,8 +14,8 @@ def calculate_calories(user_info):
     height = user_info['height']
     age = user_info['age']
     gender = user_info['gender']
-    activity_work = user_info['physical_activity_at_work']
-    activity_free_time = user_info['physical_activity_in_free_time']
+    activity_work = user_info['physical_activity_at_work'] - 1
+    activity_free_time = user_info['physical_activity_in_free_time'] - 1
     objective = user_info['objective']
 
     if gender == 'man':
@@ -38,9 +38,9 @@ def calculate_calories(user_info):
     if objective == 'less':
         total_calories = total_calories - 300
     elif objective == 'same':
-        total_calories = total_calories
+        total_calories = total_calories - 50
     elif objective == 'more':
-        total_calories = total_calories + 300
+        total_calories = total_calories + 100
 
     return total_calories
 

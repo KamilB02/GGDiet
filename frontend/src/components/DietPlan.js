@@ -1,50 +1,118 @@
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import {
+    Box,
+    Card,
+    CardContent,
+    Typography,
+    Grid,
+    List,
+    ListItem,
+    ListItemText,
+    Divider,
+} from "@mui/material";
 
-function DietResult() {
-    const location = useLocation();
-    const { diet } = location.state || {}; // Pobieramy dane diety
+const DietResult = () => {
+    const [dietPlans, setDietPlans] = useState([]);
 
-    console.log('Received diet:', diet); // Debugowanie danych
+    useEffect(() => {
+        const storedDietPlans = localStorage.getItem("dietPlans");
+        if (storedDietPlans) {
+            setDietPlans(JSON.parse(storedDietPlans)); // Pobierz wszystkie plany
+        } else {
+            console.error("No diet plans found in Local Storage");
+        }
+    }, []);
 
-    // Mapowanie posiłków na przyjazne nazwy
-    const mealNames = {
-        breakfast1: 'Pierwsze Śniadanie',
-        breakfast2: 'Drugie Śniadanie',
-        lunch: 'Obiad',
-        tea: 'Podwieczorek',
-        dinner: 'Kolacja'
-    };
-
-    // Sprawdzamy, czy dane diety są kompletne
-    if (!diet || !diet.breakfast1 || !diet.breakfast2 || !diet.lunch || !diet.tea || !diet.dinner) {
-        return <div>Nie wygenerowano diety lub dane są niekompletne</div>;
+    if (dietPlans.length === 0) {
+        return (
+            <Box sx={{ p: 3 }}>
+                <Typography variant="h5">Brak wygenerowanych diet.</Typography>
+            </Box>
+        );
     }
 
     return (
-        <div>
-            <h2>Wyniki diety</h2>
-            <div>Całkowite kalorie: {diet.calories_total}</div>
-            <div>Makroskładniki: Białko: {diet.macros.protein}, Węglowodany: {diet.macros.carbs}, Tłuszcze: {diet.macros.fats}</div>
+        <Box sx={{ p: 3 }}>
+            <Typography variant="h4" gutterBottom>
+                Wyniki diety
+            </Typography>
+            {dietPlans.map((dietPlan, planIndex) => (
+                <Box key={planIndex} sx={{ mb: 5 }}>
+                    <Typography variant="h5" gutterBottom>
+                        Plan diety {planIndex + 1}
+                    </Typography>
+                    <Grid container spacing={3}>
+                        {/* Podsumowanie kalorii */}
+                        <Grid item xs={12}>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h6" gutterBottom>
+                                        Podsumowanie kalorii i makroskładników
+                                    </Typography>
+                                    <Typography>
+                                        <strong>Całkowite kalorie:</strong> {dietPlan.calories_total} kcal
+                                    </Typography>
+                                    <Typography>
+                                        <strong>Białko:</strong> {dietPlan.macros.protein} g
+                                    </Typography>
+                                    <Typography>
+                                        <strong>Węglowodany:</strong> {dietPlan.macros.carbs} g
+                                    </Typography>
+                                    <Typography>
+                                        <strong>Tłuszcze:</strong> {dietPlan.macros.fats} g
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
 
-            <h3>Posiłki:</h3>
-            {['breakfast1', 'breakfast2', 'lunch', 'tea', 'dinner'].map((mealType) => (
-                <div key={mealType}>
-                    <h4>{mealNames[mealType]}</h4> {/* Używamy mapowania nazw posiłków */}
-                    {diet[mealType] && diet[mealType].length > 0 ? ( // Sprawdzamy, czy posiłek istnieje i ma jakieś przepisy
-                        diet[mealType].map((meal, index) => (
-                            <div key={index}>
-                                <p>{meal.name}</p>
-                                <p>Kalorie: {meal.calories}</p>
-                                <p>Składniki: {meal.ingredients.join(', ')}</p>
-                            </div>
-                        ))
-                    ) : (
-                        <p>Brak przepisów dla tego posiłku.</p> // Jeśli brak przepisów, wyświetlamy komunikat
-                    )}
-                </div>
+                        {/* Szczegóły posiłków */}
+                        {["breakfast1", "breakfast2", "lunch", "tea", "dinner"].map(
+                            (mealKey, index) => (
+                                <Grid item xs={12} sm={6} md={4} key={index}>
+                                    <Card>
+                                        <CardContent>
+                                            <Typography variant="h6" gutterBottom>
+                                                {mealKey === "breakfast1"
+                                                    ? "Śniadanie 1"
+                                                    : mealKey === "breakfast2"
+                                                    ? "Śniadanie 2"
+                                                    : mealKey === "lunch"
+                                                    ? "Obiad"
+                                                    : mealKey === "tea"
+                                                    ? "Podwieczorek"
+                                                    : "Kolacja"}
+                                            </Typography>
+                                            <List>
+                                                {dietPlan[mealKey].map((meal, i) => (
+                                                    <Box key={i}>
+                                                        <ListItem>
+                                                            <ListItemText
+                                                                primary={meal.name}
+                                                                secondary={`Kalorie: ${meal.calories} kcal`}
+                                                            />
+                                                        </ListItem>
+                                                        <Typography variant="body2" sx={{ ml: 2 }}>
+                                                            <strong>Makroskładniki:</strong> Białko:{" "}
+                                                            {meal.macros.protein} g, Węglowodany:{" "}
+                                                            {meal.macros.carbs} g, Tłuszcze: {meal.macros.fats} g
+                                                        </Typography>
+                                                        <Typography variant="body2" sx={{ ml: 2, mt: 1 }}>
+                                                            <strong>Składniki:</strong> {meal.ingredients.join(", ")}
+                                                        </Typography>
+                                                        <Divider sx={{ my: 1 }} />
+                                                    </Box>
+                                                ))}
+                                            </List>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            )
+                        )}
+                    </Grid>
+                </Box>
             ))}
-        </div>
+        </Box>
     );
-}
+};
 
 export default DietResult;

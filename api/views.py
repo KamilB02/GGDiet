@@ -18,7 +18,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 import logging
 import uuid
 
+
 logger = logging.getLogger(__name__)
+
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -107,21 +109,15 @@ class GenerateDietView(APIView):
             'carbs': daily_macros[1],
             'fats': daily_macros[2],
         })
+        print("Generated diet plans:", preferences)
 
         # Przygotowanie wymagań użytkownika na podstawie preferencji
         user_requirements = prepare_user_requirements(preferences)
 
         # Uruchomienie algorytmu genetycznego
 
-        diet_plans = []
-        id = 1
-        for _ in range(3):
-            diet_plan = genetic_algorithm(user_requirements)
-            diet_plan['id'] = id  # Generowanie unikalnego id
-            id+=1
-            diet_plans.append(diet_plan)
+        diet_plans = [genetic_algorithm(user_requirements, _) for _ in range(3)]
 
-        print("Generated diet plans:", diet_plans)
         used_recipes.clear()
         # Zwrócenie wygenerowanej diety
-        return JsonResponse( diet_plan, status=status.HTTP_200_OK)
+        return JsonResponse( {'diet_plans': diet_plans}, status=status.HTTP_200_OK)

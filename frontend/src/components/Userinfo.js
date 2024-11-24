@@ -148,10 +148,10 @@ const UserInfoForm = () => {
                                     fullWidth
                                     required
                                 >
-                                    <MenuItem value="1">Niska</MenuItem>
-                                    <MenuItem value="2">Umiarkowana</MenuItem>
-                                    <MenuItem value="3">Wysoka</MenuItem>
-                                    <MenuItem value="4">Bardzo wysoka</MenuItem>
+                                    <MenuItem value="1">Niska - Praca siedząca</MenuItem>
+                                    <MenuItem value="2">Umiarkowana - Lekka praca (np. dostawca)</MenuItem>
+                                    <MenuItem value="3">Wysoka - Praca fizyczna</MenuItem>
+                                    <MenuItem value="4">Bardzo wysoka - Regularna ciężka praca fizyczna</MenuItem>
                                 </TextField>
                             </Grid>
                             <Grid item xs={12}>
@@ -164,11 +164,11 @@ const UserInfoForm = () => {
                                     fullWidth
                                     required
                                 >
-                                    <MenuItem value="1">Niska</MenuItem>
-                                    <MenuItem value="2">Umiarkowana</MenuItem>
-                                    <MenuItem value="3">Aktywna</MenuItem>
-                                    <MenuItem value="4">Bardzo aktywna</MenuItem>
-                                    <MenuItem value="5">Ekstremalna</MenuItem>
+                                    <MenuItem value="1">Brak dodatkowej aktywności fizycznej</MenuItem>
+                                    <MenuItem value="2">Ćwiczenia raz w tygodniu</MenuItem>
+                                    <MenuItem value="3">Ćwiczenia dwa/trzy razy tygodniu</MenuItem>
+                                    <MenuItem value="4">Ciężkie treningi dwa/trzy razy tygodniu</MenuItem>
+                                    <MenuItem value="5">Ciężkie treningi conajmniej cztery razy w tygodniu</MenuItem>
                                 </TextField>
                             </Grid>
                             <Grid item xs={12}>
