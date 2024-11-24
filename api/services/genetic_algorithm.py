@@ -2,8 +2,8 @@ import random
 
 from api.services.all_recipes import available_recipes
 from api.serializers import DietPlanSerializer
-used_recipes = set()
 
+used_recipes = set()
 
 
 # user_requirements = {
@@ -23,8 +23,9 @@ used_recipes = set()
 #         'tofu'
 #     ]
 # }
+
+
 def prepare_user_requirements(preferences):
-    # Przygotowanie słownika z wymaganiami użytkownika
     user_requirements = {
         'calories': preferences['calories'],
         'protein': preferences['protein'],
@@ -37,6 +38,7 @@ def prepare_user_requirements(preferences):
     }
 
     return user_requirements
+
 
 class DietPlan:
     def __init__(self, breakfast1, breakfast2, lunch, tea, dinner):
@@ -62,45 +64,66 @@ class DietPlan:
             for macro, value in recipe['macros'].items():
                 total_macros[macro] += value
         return total_macros
+
     def to_dict(self):
-            # Zwrócenie danych w formie słownika
+
         return {
-                'breakfast1': self.breakfast1,
-                'breakfast2': self.breakfast2,
-                'lunch': self.lunch,
-                'tea': self.tea,
-                'dinner': self.dinner,
-                'calories_breakfast1': self.calories_breakfast1,
-                'calories_breakfast2': self.calories_breakfast2,
-                'calories_lunch': self.calories_lunch,
-                'calories_tea': self.calories_tea,
-                'calories_dinner': self.calories_dinner,
-                'calories_total': self.calories,
-                'macros': self.macros
-            }
+            'breakfast1': self.breakfast1,
+            'breakfast2': self.breakfast2,
+            'lunch': self.lunch,
+            'tea': self.tea,
+            'dinner': self.dinner,
+            'calories_breakfast1': self.calories_breakfast1,
+            'calories_breakfast2': self.calories_breakfast2,
+            'calories_lunch': self.calories_lunch,
+            'calories_tea': self.calories_tea,
+            'calories_dinner': self.calories_dinner,
+            'calories_total': self.calories,
+            'macros': self.macros
+        }
 
-def generate_initial_population(user_requirements, meal_number, size=5000):
 
+def generate_initial_population(user_requirements, meal_number, size):
     population = []
 
     if user_requirements['required_breakfast1_1'] and meal_number == 0:
-        breakfast1_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements['required_breakfast1_1']]
+        breakfast1_recipes = [recipe for recipe in available_recipes if
+                              'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                                  'required_breakfast1_1']]
 
     elif user_requirements['required_breakfast1_2'] and meal_number == 1:
-        breakfast1_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements['required_breakfast1_2']]
+        breakfast1_recipes = [recipe for recipe in available_recipes if
+                              'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                                  'required_breakfast1_2']]
 
     elif user_requirements['required_breakfast1_3'] and meal_number == 2:
-        breakfast1_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements['required_breakfast1_3']]
+        breakfast1_recipes = [recipe for recipe in available_recipes if
+                              'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                                  'required_breakfast1_3']]
     else:
-        breakfast1_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
+        breakfast1_recipes = [recipe for recipe in available_recipes if
+                              'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                                  ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                                  recipe['ingredients'])]
 
-    lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients']) ]
+    lunch_recipes = [recipe for recipe in available_recipes if
+                     'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                         ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                         recipe['ingredients'])]
 
-    breakfast2_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
+    breakfast2_recipes = [recipe for recipe in available_recipes if
+                          'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                              ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                              recipe['ingredients'])]
 
-    tea_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
+    tea_recipes = [recipe for recipe in available_recipes if
+                   'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                       ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
 
-    dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
+    dinner_recipes = [recipe for recipe in available_recipes if
+                      'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                          ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                          recipe['ingredients'])]
 
     for _ in range(size):
 
@@ -156,7 +179,6 @@ def generate_initial_population(user_requirements, meal_number, size=5000):
 def fitness(plan, user_requirements):
     score = 0
 
-    # 1. Punkty za ogólną zgodność kaloryczną
     calorie_diff = abs(plan.calories - user_requirements['calories'])
     if calorie_diff <= 20:
         score += 120
@@ -167,7 +189,6 @@ def fitness(plan, user_requirements):
     else:
         score -= calorie_diff * 2
 
-    # 2. Punkty za białko
     protein_diff = abs(plan.macros['protein'] - user_requirements['protein'])
     if protein_diff <= 4:
         score += 125
@@ -178,7 +199,6 @@ def fitness(plan, user_requirements):
     else:
         score -= protein_diff * 2
 
-    # 3. Punkty za węglowodany
     carb_diff = abs(plan.macros['carbs'] - user_requirements['carbs'])
     if carb_diff <= 4:
         score += 125
@@ -189,7 +209,6 @@ def fitness(plan, user_requirements):
     else:
         score -= carb_diff * 2
 
-    # 4. Punkty za tłuszcze
     fat_diff = abs(plan.macros['fats'] - user_requirements['fats'])
     if fat_diff <= 4:
         score += 125
@@ -200,7 +219,6 @@ def fitness(plan, user_requirements):
     else:
         score -= fat_diff * 2
 
-    # 5. Procentowy rozkład kaloryczności posiłków
     if 0.18 <= plan.calories_breakfast1 / user_requirements['calories'] <= 0.22:
         score += 80
     if 0.10 <= plan.calories_breakfast2 / user_requirements['calories'] <= 0.12:
@@ -212,28 +230,24 @@ def fitness(plan, user_requirements):
     if 0.25 <= plan.calories_dinner / user_requirements['calories'] <= 0.30:
         score += 80
 
-    # 6. Zmienność posiłków
-    unique_meals = len(set([recipe['name'] for recipe in plan.recipes]))
-    score += unique_meals * 10
-
-    # 7. Wprowadzenie współczynnika zgodności
     total_match_ratio = (1 - calorie_diff / user_requirements['calories']) * 100
     score += total_match_ratio
 
     return score
 
 
-# Algorytm genetyczny
-def genetic_algorithm(user_requirements, meal_number, generations=2000, additional_generations=2000, max_extra_generations=4):
-
+def genetic_algorithm(user_requirements, meal_number, generations, additional_generations, max_extra_generations):
     def generate_population():
-        return generate_initial_population(user_requirements, meal_number)
+        return generate_initial_population(user_requirements, meal_number, 7000)
 
     population = generate_population()
 
     print(user_requirements)
 
-    lunch_recipes = [recipe for recipe in available_recipes if 'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
+    lunch_recipes = [recipe for recipe in available_recipes if
+                     'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                         ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                         recipe['ingredients'])]
 
     if user_requirements['required_breakfast1_1'] and meal_number == 0:
         breakfast1_recipes = [recipe for recipe in available_recipes if
@@ -255,9 +269,17 @@ def genetic_algorithm(user_requirements, meal_number, generations=2000, addition
                                   ingredient in user_requirements['unwanted_ingredients'] for ingredient in
                                   recipe['ingredients'])]
 
-    breakfast2_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
-    tea_recipes = [recipe for recipe in available_recipes if 'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
-    dinner_recipes = [recipe for recipe in available_recipes if 'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
+    breakfast2_recipes = [recipe for recipe in available_recipes if
+                          'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                              ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                              recipe['ingredients'])]
+    tea_recipes = [recipe for recipe in available_recipes if
+                   'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                       ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
+    dinner_recipes = [recipe for recipe in available_recipes if
+                      'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                          ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                          recipe['ingredients'])]
 
     extra_generations = 0
     stop = 0
@@ -310,7 +332,9 @@ def genetic_algorithm(user_requirements, meal_number, generations=2000, addition
                     else:
                         crossover_breakfast2 = random.sample(parent1.breakfast2 + parent2.breakfast2, k=1)
 
-                new_population.append(DietPlan(crossover_breakfast1, crossover_breakfast2, crossover_lunch, crossover_tea, crossover_dinners))
+                new_population.append(
+                    DietPlan(crossover_breakfast1, crossover_breakfast2, crossover_lunch, crossover_tea,
+                             crossover_dinners))
 
             for plan in new_population:
                 if random.random() < 0.2:
@@ -417,9 +441,3 @@ def genetic_algorithm(user_requirements, meal_number, generations=2000, addition
 #     print("Makroskładniki:", best_plan.macros)
 #     print(used_recipes)
 #     print()
-
-
-
-
-
-

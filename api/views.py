@@ -17,7 +17,8 @@ from .services.user_required import calculate_macro, calculate_calories
 from rest_framework_simplejwt.views import TokenObtainPairView
 import logging
 import uuid
-
+import concurrent.futures
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -29,13 +30,10 @@ class CreateUserView(generics.CreateAPIView):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
-        # Wywołanie oryginalnego metody w celu uzyskania tokenu
         response = super().post(request, *args, **kwargs)
 
-        # Dodajemy nazwę użytkownika do odpowiedzi
         username = request.data.get("username")
 
-        # Zwracamy odpowiedź z tokenem i nazwą użytkownika
         return Response({
             'access': response.data['access'],
             'refresh': response.data['refresh'],
@@ -59,7 +57,6 @@ class UserInfoView(APIView):
     def get(self, request):
         user = request.user
         try:
-            # Pobranie informacji o użytkowniku
             user_info = UserInfo.objects.get(user=user)
             serializer = UserInfoSerializer(user_info)
             return Response(serializer.data, status=200)
@@ -80,11 +77,10 @@ class GenerateDietView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        # Pobranie zalogowanego użytkownika
+
         user = request.user
         user_info = UserInfo.objects.get(user=user)
 
-        # Dane użytkownika
         user_data = {
             'weight': user_info.weight,
             'height': user_info.height,
@@ -95,14 +91,11 @@ class GenerateDietView(APIView):
             'objective': user_info.objective,
         }
 
-        # Obliczenie kalorii i makroskładników
         daily_calories = calculate_calories(user_data)
         daily_macros = calculate_macro(user_data)
 
-        # Dane z żądania (z React)
         preferences = request.data
 
-        # Dodanie kalorii i makroskładników do preferencji
         preferences.update({
             'calories': daily_calories,
             'protein': daily_macros[0],
@@ -111,13 +104,25 @@ class GenerateDietView(APIView):
         })
         print("Generated diet plans:", preferences)
 
-        # Przygotowanie wymagań użytkownika na podstawie preferencji
+        def run_genetic_algorithm_with_timeout(user_requirements, timeout):
+            def run_algorithm():
+                return [genetic_algorithm(user_requirements, _, 2000, 2000, 7) for _ in range(3)]
+
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(run_algorithm)
+                try:
+                    result = future.result(timeout=timeout)
+                    return result
+                except concurrent.futures.TimeoutError:
+                    print("Operacja przekroczyła limit czasu!")
+                    return None
+
         user_requirements = prepare_user_requirements(preferences)
-
-        # Uruchomienie algorytmu genetycznego
-
-        diet_plans = [genetic_algorithm(user_requirements, _) for _ in range(3)]
+        diet_plans = run_genetic_algorithm_with_timeout(user_requirements, 60)
 
         used_recipes.clear()
-        # Zwrócenie wygenerowanej diety
+
+        if diet_plans is None:
+            return JsonResponse({'error': 'Operacja przekroczyła limit czasu'}, status=status.HTTP_408_REQUEST_TIMEOUT)
+
         return JsonResponse( {'diet_plans': diet_plans}, status=status.HTTP_200_OK)
