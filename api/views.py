@@ -102,7 +102,6 @@ class GenerateDietView(APIView):
             'carbs': daily_macros[1],
             'fats': daily_macros[2],
         })
-        print("Generated diet plans:", preferences)
 
         def run_genetic_algorithm_with_timeout(user_requirements, timeout):
             def run_algorithm():

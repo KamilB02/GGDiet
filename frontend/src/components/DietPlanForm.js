@@ -81,7 +81,7 @@ function DietPlanForm() {
             (recipe) =>
                 recipe.meal_type.includes(mealType) ||
                 (mealType === 'secondBreakfast' && recipe.meal_type.includes('breakfast')) ||
-                (mealType === 'tea' && recipe.meal_type.includes('snack'))
+                (mealType === 'tea' && recipe.meal_type.includes('breakfast'))
         );
         return meals.filter((recipe) =>
             recipe.name.toLowerCase().includes(mealInput.toLowerCase())

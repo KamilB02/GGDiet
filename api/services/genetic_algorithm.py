@@ -35,6 +35,18 @@ def prepare_user_requirements(preferences):
         'required_breakfast1_1': preferences['mealPreferences1']['breakfast'],
         'required_breakfast1_2': preferences['mealPreferences2']['breakfast'],
         'required_breakfast1_3': preferences['mealPreferences3']['breakfast'],
+        'required_breakfast2_1': preferences['mealPreferences1']['secondBreakfast'],
+        'required_breakfast2_2': preferences['mealPreferences2']['secondBreakfast'],
+        'required_breakfast2_3': preferences['mealPreferences3']['secondBreakfast'],
+        'required_lunch_1': preferences['mealPreferences1']['lunch'],
+        'required_lunch_2': preferences['mealPreferences2']['lunch'],
+        'required_lunch_3': preferences['mealPreferences3']['lunch'],
+        'required_tea_1': preferences['mealPreferences1']['tea'],
+        'required_tea_2': preferences['mealPreferences2']['tea'],
+        'required_tea_3': preferences['mealPreferences3']['tea'],
+        'required_dinner_1': preferences['mealPreferences1']['dinner'],
+        'required_dinner_2': preferences['mealPreferences2']['dinner'],
+        'required_dinner_3': preferences['mealPreferences3']['dinner'],
     }
 
     return user_requirements
@@ -84,6 +96,9 @@ class DietPlan:
 
 
 def generate_initial_population(user_requirements, meal_number, size):
+
+    print("generowanie populacji")
+
     population = []
 
     if user_requirements['required_breakfast1_1'] and meal_number == 0:
@@ -106,24 +121,85 @@ def generate_initial_population(user_requirements, meal_number, size):
                                   ingredient in user_requirements['unwanted_ingredients'] for ingredient in
                                   recipe['ingredients'])]
 
-    lunch_recipes = [recipe for recipe in available_recipes if
-                     'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
-                         ingredient in user_requirements['unwanted_ingredients'] for ingredient in
-                         recipe['ingredients'])]
+    if user_requirements['required_breakfast2_1'] and meal_number == 0:
+        breakfast2_recipes = [recipe for recipe in available_recipes if
+                              'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                                  'required_breakfast2_1']]
 
-    breakfast2_recipes = [recipe for recipe in available_recipes if
-                          'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+    elif user_requirements['required_breakfast2_2'] and meal_number == 1:
+        breakfast2_recipes = [recipe for recipe in available_recipes if
+                              'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                                  'required_breakfast2_2']]
+
+    elif user_requirements['required_breakfast2_3'] and meal_number == 2:
+        breakfast2_recipes = [recipe for recipe in available_recipes if
+                              'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                                  'required_breakfast2_3']]
+    else:
+        breakfast2_recipes = [recipe for recipe in available_recipes if
+                              'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                                  ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                                  recipe['ingredients'])]
+
+    if user_requirements['required_lunch_1'] and meal_number == 0:
+        lunch_recipes = [recipe for recipe in available_recipes if
+                         'lunch' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                             'required_lunch_1']]
+
+    elif user_requirements['required_lunch_2'] and meal_number == 1:
+        lunch_recipes = [recipe for recipe in available_recipes if
+                         'lunch' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                             'required_lunch_2']]
+
+    elif user_requirements['required_lunch_3'] and meal_number == 2:
+        lunch_recipes = [recipe for recipe in available_recipes if
+                         'lunch' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                             'required_lunch_3']]
+    else:
+        lunch_recipes = [recipe for recipe in available_recipes if
+                         'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                             ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                             recipe['ingredients'])]
+
+    if user_requirements['required_tea_1'] and meal_number == 0:
+        tea_recipes = [recipe for recipe in available_recipes if
+                       'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                           'required_tea_1']]
+
+    elif user_requirements['required_tea_2'] and meal_number == 1:
+        tea_recipes = [recipe for recipe in available_recipes if
+                       'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                           'required_tea_2']]
+
+    elif user_requirements['required_tea_2'] and meal_number == 2:
+        tea_recipes = [recipe for recipe in available_recipes if
+                       'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                           'required_tea_2']]
+    else:
+        tea_recipes = [recipe for recipe in available_recipes if
+                       'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                           ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                           recipe['ingredients'])]
+
+    if user_requirements['required_dinner_1'] and meal_number == 0:
+        dinner_recipes = [recipe for recipe in available_recipes if
+                          'dinner' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                              'required_dinner_1']]
+
+    elif user_requirements['required_dinner_2'] and meal_number == 1:
+        dinner_recipes = [recipe for recipe in available_recipes if
+                          'dinner' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                              'required_dinner_2']]
+
+    elif user_requirements['required_dinner_3'] and meal_number == 2:
+        dinner_recipes = [recipe for recipe in available_recipes if
+                          'dinner' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                              'required_dinner_3']]
+    else:
+        dinner_recipes = [recipe for recipe in available_recipes if
+                          'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
                               ingredient in user_requirements['unwanted_ingredients'] for ingredient in
                               recipe['ingredients'])]
-
-    tea_recipes = [recipe for recipe in available_recipes if
-                   'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
-                       ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
-
-    dinner_recipes = [recipe for recipe in available_recipes if
-                      'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
-                          ingredient in user_requirements['unwanted_ingredients'] for ingredient in
-                          recipe['ingredients'])]
 
     for _ in range(size):
 
@@ -173,6 +249,7 @@ def generate_initial_population(user_requirements, meal_number, size):
 
         population.append(diet_plan)
 
+    print("Koniec generowanie populacji")
     return population
 
 
@@ -237,17 +314,14 @@ def fitness(plan, user_requirements):
 
 
 def genetic_algorithm(user_requirements, meal_number, generations, additional_generations, max_extra_generations):
+    print("1")
+
     def generate_population():
         return generate_initial_population(user_requirements, meal_number, 7000)
 
     population = generate_population()
 
-    print(user_requirements)
-
-    lunch_recipes = [recipe for recipe in available_recipes if
-                     'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
-                         ingredient in user_requirements['unwanted_ingredients'] for ingredient in
-                         recipe['ingredients'])]
+    print("2")
 
     if user_requirements['required_breakfast1_1'] and meal_number == 0:
         breakfast1_recipes = [recipe for recipe in available_recipes if
@@ -269,21 +343,89 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
                                   ingredient in user_requirements['unwanted_ingredients'] for ingredient in
                                   recipe['ingredients'])]
 
-    breakfast2_recipes = [recipe for recipe in available_recipes if
-                          'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+    if user_requirements['required_breakfast2_1'] and meal_number == 0:
+        breakfast2_recipes = [recipe for recipe in available_recipes if
+                              'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                                  'required_breakfast2_1']]
+
+    elif user_requirements['required_breakfast2_2'] and meal_number == 1:
+        breakfast2_recipes = [recipe for recipe in available_recipes if
+                              'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                                  'required_breakfast2_2']]
+
+    elif user_requirements['required_breakfast2_3'] and meal_number == 2:
+        breakfast2_recipes = [recipe for recipe in available_recipes if
+                              'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                                  'required_breakfast2_3']]
+    else:
+        breakfast2_recipes = [recipe for recipe in available_recipes if
+                              'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                                  ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                                  recipe['ingredients'])]
+
+    if user_requirements['required_lunch_1'] and meal_number == 0:
+        lunch_recipes = [recipe for recipe in available_recipes if
+                         'lunch' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                             'required_lunch_1']]
+
+    elif user_requirements['required_lunch_2'] and meal_number == 1:
+        lunch_recipes = [recipe for recipe in available_recipes if
+                         'lunch' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                             'required_lunch_2']]
+
+    elif user_requirements['required_lunch_3'] and meal_number == 2:
+        lunch_recipes = [recipe for recipe in available_recipes if
+                         'lunch' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                             'required_lunch_3']]
+    else:
+        lunch_recipes = [recipe for recipe in available_recipes if
+                         'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                             ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                             recipe['ingredients'])]
+
+    if user_requirements['required_tea_1'] and meal_number == 0:
+        tea_recipes = [recipe for recipe in available_recipes if
+                       'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                           'required_tea_1']]
+
+    elif user_requirements['required_tea_2'] and meal_number == 1:
+        tea_recipes = [recipe for recipe in available_recipes if
+                       'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                           'required_tea_2']]
+
+    elif user_requirements['required_tea_2'] and meal_number == 2:
+        tea_recipes = [recipe for recipe in available_recipes if
+                       'breakfast' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                           'required_tea_2']]
+    else:
+        tea_recipes = [recipe for recipe in available_recipes if
+                       'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                           ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                           recipe['ingredients'])]
+    print("3")
+    if user_requirements['required_dinner_1'] and meal_number == 0:
+        dinner_recipes = [recipe for recipe in available_recipes if
+                          'dinner' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                              'required_dinner_1']]
+
+    elif user_requirements['required_dinner_2'] and meal_number == 1:
+        dinner_recipes = [recipe for recipe in available_recipes if
+                          'dinner' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                              'required_dinner_2']]
+
+    elif user_requirements['required_dinner_3'] and meal_number == 2:
+        dinner_recipes = [recipe for recipe in available_recipes if
+                          'dinner' in recipe['meal_type'] and recipe['name'] in user_requirements[
+                              'required_dinner_3']]
+    else:
+        dinner_recipes = [recipe for recipe in available_recipes if
+                          'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
                               ingredient in user_requirements['unwanted_ingredients'] for ingredient in
                               recipe['ingredients'])]
-    tea_recipes = [recipe for recipe in available_recipes if
-                   'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
-                       ingredient in user_requirements['unwanted_ingredients'] for ingredient in recipe['ingredients'])]
-    dinner_recipes = [recipe for recipe in available_recipes if
-                      'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
-                          ingredient in user_requirements['unwanted_ingredients'] for ingredient in
-                          recipe['ingredients'])]
-
+    print("4")
     extra_generations = 0
     stop = 0
-
+    print("5")
     while extra_generations <= max_extra_generations:
         for generation in range(generations):
             population.sort(key=lambda x: fitness(x, user_requirements), reverse=True)
@@ -297,13 +439,15 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
                 crossover_lunch = random.sample(parent1.lunch + parent2.lunch, k=1)
                 crossover_tea = random.sample(parent1.tea + parent2.tea, k=1)
                 crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
-
+                print("6")
                 while crossover_dinners[0] == crossover_lunch[0]:
-                    if parent1.dinner == parent2.dinner:
+                    if user_requirements['required_dinner_1'] and meal_number == 0:
+                        crossover_lunch = random.choice(lunch_recipes)
+                    elif parent1.dinner == parent2.dinner:
                         crossover_lunch = random.sample(parent1.lunch + parent2.lunch, k=1)
                     else:
                         crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
-
+                print("7")
                 while crossover_breakfast1[0] == crossover_breakfast2[0]:
                     if parent1.breakfast1 == parent2.breakfast1:
                         crossover_breakfast2 = random.sample(parent1.breakfast2 + parent2.breakfast2, k=1)
@@ -335,7 +479,7 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
                 new_population.append(
                     DietPlan(crossover_breakfast1, crossover_breakfast2, crossover_lunch, crossover_tea,
                              crossover_dinners))
-
+            print("7")
             for plan in new_population:
                 if random.random() < 0.2:
                     if random.random() < 0.5:
@@ -383,18 +527,8 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
             print("Znaleziono plan")
             print("Najlepszy plan dietetyczny :")
             for recipe in best_plan.recipes:
-                if recipe['name'] == user_requirements['required_breakfast1_1']:
-                    print(recipe['name'])
-                    user_requirements['required_breakfast1_1'] = None
-                elif recipe['name'] == user_requirements['required_breakfast1_2']:
-                    print(recipe['name'])
-                    user_requirements['required_breakfast1_2'] = None
-                elif recipe['name'] == user_requirements['required_breakfast1_3']:
-                    print(recipe['name'])
-                    user_requirements['required_breakfast1_3'] = None
-                else:
-                    print(recipe['name'])
-                    used_recipes.add(recipe['name'])
+                print(recipe['name'])
+                used_recipes.add(recipe['name'])
             print()
             print("Kalorie:", best_plan.calories)
             print()
@@ -406,8 +540,6 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
             print()
             print("Makroskładniki:", best_plan.macros)
 
-            print(used_recipes)
-            print(user_requirements)
             return best_plan.to_dict()
         else:
             print("Nie znaleziono, szukam dalej")
