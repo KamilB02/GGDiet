@@ -96,7 +96,6 @@ class DietPlan:
 
 
 def generate_initial_population(user_requirements, meal_number, size):
-
     print("generowanie populacji")
 
     population = []
@@ -314,14 +313,10 @@ def fitness(plan, user_requirements):
 
 
 def genetic_algorithm(user_requirements, meal_number, generations, additional_generations, max_extra_generations):
-    print("1")
-
     def generate_population():
         return generate_initial_population(user_requirements, meal_number, 7000)
 
     population = generate_population()
-
-    print("2")
 
     if user_requirements['required_breakfast1_1'] and meal_number == 0:
         breakfast1_recipes = [recipe for recipe in available_recipes if
@@ -402,7 +397,7 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
                        'breakfast' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
                            ingredient in user_requirements['unwanted_ingredients'] for ingredient in
                            recipe['ingredients'])]
-    print("3")
+
     if user_requirements['required_dinner_1'] and meal_number == 0:
         dinner_recipes = [recipe for recipe in available_recipes if
                           'dinner' in recipe['meal_type'] and recipe['name'] in user_requirements[
@@ -422,10 +417,10 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
                           'dinner' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
                               ingredient in user_requirements['unwanted_ingredients'] for ingredient in
                               recipe['ingredients'])]
-    print("4")
+
     extra_generations = 0
     stop = 0
-    print("5")
+
     while extra_generations <= max_extra_generations:
         for generation in range(generations):
             population.sort(key=lambda x: fitness(x, user_requirements), reverse=True)
@@ -439,15 +434,25 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
                 crossover_lunch = random.sample(parent1.lunch + parent2.lunch, k=1)
                 crossover_tea = random.sample(parent1.tea + parent2.tea, k=1)
                 crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
-                print("6")
+
                 while crossover_dinners[0] == crossover_lunch[0]:
                     if user_requirements['required_dinner_1'] and meal_number == 0:
-                        crossover_lunch = random.choice(lunch_recipes)
+                        crossover_lunch = random.sample(parent1.lunch + parent2.lunch, k=1)
+                    if user_requirements['required_dinner_2'] and meal_number == 1:
+                        crossover_lunch = random.sample(parent1.lunch + parent2.lunch, k=1)
+                    if user_requirements['required_dinner_3'] and meal_number == 2:
+                        crossover_lunch = random.sample(parent1.lunch + parent2.lunch, k=1)
+                    if user_requirements['required_lunch_1'] and meal_number == 0:
+                        crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
+                    if user_requirements['required_lunch_2'] and meal_number == 1:
+                        crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
+                    if user_requirements['required_lunch_3'] and meal_number == 2:
+                        crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
                     elif parent1.dinner == parent2.dinner:
                         crossover_lunch = random.sample(parent1.lunch + parent2.lunch, k=1)
                     else:
                         crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
-                print("7")
+
                 while crossover_breakfast1[0] == crossover_breakfast2[0]:
                     if parent1.breakfast1 == parent2.breakfast1:
                         crossover_breakfast2 = random.sample(parent1.breakfast2 + parent2.breakfast2, k=1)
@@ -479,7 +484,7 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
                 new_population.append(
                     DietPlan(crossover_breakfast1, crossover_breakfast2, crossover_lunch, crossover_tea,
                              crossover_dinners))
-            print("7")
+
             for plan in new_population:
                 if random.random() < 0.2:
                     if random.random() < 0.5:
@@ -494,7 +499,23 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
                         plan.dinner[0] = random.choice(dinner_recipes)
 
                     while plan.dinner[0] == plan.lunch[0]:
-                        plan.dinner[0] = random.choice(dinner_recipes)
+                        if user_requirements['required_dinner_1'] and meal_number == 0:
+                            plan.lunch[0] = random.choice(lunch_recipes)
+                        elif user_requirements['required_dinner_2'] and meal_number == 1:
+                            plan.lunch[0] = random.choice(lunch_recipes)
+                        elif user_requirements['required_dinner_3'] and meal_number == 2:
+                            plan.lunch[0] = random.choice(lunch_recipes)
+                        elif user_requirements['required_lunch_1'] and meal_number == 0:
+                            plan.dinner[0] = random.choice(dinner_recipes)
+                        elif user_requirements['required_lunch_2'] and meal_number == 1:
+                            plan.dinner[0] = random.choice(dinner_recipes)
+                        elif user_requirements['required_lunch_3'] and meal_number == 2:
+                            plan.dinner[0] = random.choice(dinner_recipes)
+                        else:
+                            if random.random() < 0.5:
+                                plan.dinner[0] = random.choice(dinner_recipes)
+                            else:
+                                plan.lunch[0] = random.choice(lunch_recipes)
 
                     # Sprawdzenie, czy breakfast1 i breakfast2 mają taki sam typ "snack"
                     while 'snack' in plan.breakfast1[0]['meal_type'] and 'snack' in plan.breakfast2[0]['meal_type']:
