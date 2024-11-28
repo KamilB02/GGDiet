@@ -89,10 +89,17 @@ function DietPlanForm() {
     };
 
     const handleAddIngredient = (ingredient) => {
-        if (ingredient && !avoidedIngredients.includes(ingredient)) {
+        if (ingredient && !avoidedIngredients.includes(ingredient) && avoidedIngredients.length < 4) {
             setAvoidedIngredients([...avoidedIngredients, ingredient]);
             setIngredientInput('');
+        } else if (avoidedIngredients.length >= 5) {
+            alert('Możesz dodać maksymalnie 5 składniki do unikania.');
         }
+    };
+
+
+    const countSelectedMeals = (mealPreferences) => {
+        return Object.values(mealPreferences).filter((meal) => meal !== '').length;
     };
 
     const handleIngredientRemove = (ingredientToRemove) => {
@@ -100,23 +107,40 @@ function DietPlanForm() {
     };
 
     const handleMealPreferenceChange = (mealType, mealName, mealSet) => {
-        const setMealPreferences = (mealSet === 1) ? setMealPreferences1 :
-                              (mealSet === 2) ? setMealPreferences2 : setMealPreferences3;
+        const mealPreferences =
+            mealSet === 1 ? mealPreferences1 :
+            mealSet === 2 ? mealPreferences2 :
+            mealPreferences3;
 
-        setMealPreferences((prev) => ({
-           ...prev,
-            [mealType]: prev[mealType] === mealName ? '' : mealName
-        }));
+        const setMealPreferences =
+            mealSet === 1 ? setMealPreferences1 :
+            mealSet === 2 ? setMealPreferences2 :
+            setMealPreferences3;
 
-        setMealInput('');
-        if (mealSet === 1) {
-            setFocusedMeal1(null);
-        } else if (mealSet === 2) {
-            setFocusedMeal2(null);
+        const selectedMeals = Object.values(mealPreferences);
+
+        // Sprawdzenie, czy posiłek już został wybrany w tym zestawie
+        if (selectedMeals.includes(mealName) && mealPreferences[mealType] !== mealName) {
+            alert('To danie zostało już wybrane w tym zestawie. Wybierz inne danie.');
+            return;  // Zatrzymanie dalszego działania
+        }
+
+        const selectedCount = countSelectedMeals(mealPreferences);
+
+        if (selectedCount < 2 || mealPreferences[mealType] === mealName) {
+            setMealPreferences((prev) => ({
+                ...prev,
+                [mealType]: prev[mealType] === mealName ? '' : mealName
+            }));
+            setMealInput('');
+            if (mealSet === 1) setFocusedMeal1(null);
+            else if (mealSet === 2) setFocusedMeal2(null);
+            else setFocusedMeal3(null);
         } else {
-            setFocusedMeal3(null);
+            alert('Możesz wybrać maksymalnie dwa posiłki w tym zestawie.');
         }
     };
+
 
     const handleMealClear = (mealType, mealSet) => {
         const setMealPreferences = (mealSet === 1) ? setMealPreferences1 :
@@ -163,9 +187,10 @@ function DietPlanForm() {
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f4f4f9', padding: 3 }}>
                 <Paper elevation={3} sx={{ maxWidth: 600, width: '100%', padding: 4 }}>
                     <Typography variant="h4" align="center" gutterBottom>Planowanie diety</Typography>
+                    <Typography variant="h6" align="center" sx={{ color: 'blue', marginBottom: 4 }}  gutterBottom>Podczas generowania diety pamiętaj, dając za dużo ograniczeń jest szansa że algorytm nie zadziała  </Typography>
                     <form onSubmit={handleSubmit}>
                         <Box sx={{ mb: 3 }}>
-                            <Typography variant="h6" gutterBottom>Produkty do unikania:</Typography>
+                            <Typography variant="h6" gutterBottom>Produkty do unikania (maksymalnie 5):</Typography>
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                                 <TextField
                                     value={ingredientInput}
@@ -194,27 +219,41 @@ function DietPlanForm() {
                         {/* Zestaw 1 */}
                         <Box sx={{ mb: 3 }}>
                             <Typography variant="h6" gutterBottom>Preferencje posiłków (Zestaw 1):</Typography>
-                            <Grid container spacing={2}>
+                            <Typography
+                                variant="h9"
+                                gutterBottom
+                                sx={{ color: 'blue'}} // kolor niebieski
+                            >
+                                Możesz wybrać maksymalnie 2 posiłki na zestaw
+                            </Typography>
+                            <Grid container spacing={2} sx={{ marginTop: 2 }}>
                                 {['breakfast', 'secondBreakfast', 'lunch', 'tea', 'dinner'].map((mealType) => (
-                                    <Grid item xs={12} sm={6} key={mealType}>
+                                    <Grid item xs={15} sm={6} key={mealType}>
                                         <Box>
-                                            <Typography>{mealTranslations[mealType]}</Typography>
+                                            <Typography>
+                                            {mealTranslations[mealType]}
+                                            </Typography>
                                             <TextField
-                                                value={mealPreferences1[mealType]}
+                                                value={
+                                                    mealPreferences1[mealType]
+                                                        ? `${mealPreferences1[mealType]} (${filteredMeals(mealType).find(meal => meal.name === mealPreferences1[mealType])?.calories} kcal)`
+                                                        : ''
+                                                }
                                                 onClick={() => setFocusedMeal1(mealType)}
                                                 placeholder={`Wybierz ${mealTranslations[mealType]}`}
                                                 InputProps={{ readOnly: true }}
                                                 fullWidth
                                             />
-                                            {focusedMeal1 === mealType && (
+                                            {countSelectedMeals(mealPreferences1) < 2 && focusedMeal1 === mealType && (
                                                 <List sx={{ maxHeight: 200, overflowY: 'auto', border: '1px solid #ddd' }}>
                                                     {filteredMeals(mealType).map((meal) => (
-                                                        <ListItemButton key={meal.name} onClick={() => handleMealPreferenceChange(mealType, meal.name, 1)}>
-                                                            <ListItemText primary={meal.name} />
+                                                        <ListItemButton key={meal.name} onClick={() => handleMealPreferenceChange(mealType, meal.name, 1)} disabled={Object.values(mealPreferences1).includes(meal.name)}>
+                                                            <ListItemText primary={`${meal.name} (${meal.calories} kcal)`} />
                                                         </ListItemButton>
                                                     ))}
                                                 </List>
                                             )}
+
                                             {mealPreferences1[mealType] && (
                                                 <Button variant="contained" color="secondary" onClick={() => handleMealClear(mealType, 1)}>
                                                     Wyczyść
@@ -235,17 +274,21 @@ function DietPlanForm() {
                                         <Box>
                                             <Typography>{mealTranslations[mealType]}</Typography>
                                             <TextField
-                                                value={mealPreferences2[mealType]}
+                                                value={
+                                                    mealPreferences2[mealType]
+                                                        ? `${mealPreferences2[mealType]} (${filteredMeals(mealType).find(meal => meal.name === mealPreferences2[mealType])?.calories} kcal)`
+                                                        : ''
+                                                }
                                                 onClick={() => setFocusedMeal2(mealType)}
                                                 placeholder={`Wybierz ${mealTranslations[mealType]}`}
                                                 InputProps={{ readOnly: true }}
                                                 fullWidth
                                             />
-                                            {focusedMeal2 === mealType && (
+                                            {countSelectedMeals(mealPreferences2) < 2 && focusedMeal2 === mealType && (
                                                 <List sx={{ maxHeight: 200, overflowY: 'auto', border: '1px solid #ddd' }}>
                                                     {filteredMeals(mealType).map((meal) => (
-                                                        <ListItemButton key={meal.name} onClick={() => handleMealPreferenceChange(mealType, meal.name, 2)}>
-                                                            <ListItemText primary={meal.name} />
+                                                        <ListItemButton key={meal.name} onClick={() => handleMealPreferenceChange(mealType, meal.name, 2)} disabled={Object.values(mealPreferences2).includes(meal.name)}>
+                                                            <ListItemText primary={`${meal.name} (${meal.calories} kcal)`} />
                                                         </ListItemButton>
                                                     ))}
                                                 </List>
@@ -270,17 +313,21 @@ function DietPlanForm() {
                                         <Box>
                                             <Typography>{mealTranslations[mealType]}</Typography>
                                             <TextField
-                                                value={mealPreferences3[mealType]}
+                                                value={
+                                                    mealPreferences3[mealType]
+                                                        ? `${mealPreferences3[mealType]} (${filteredMeals(mealType).find(meal => meal.name === mealPreferences3[mealType])?.calories} kcal)`
+                                                        : ''
+                                                }
                                                 onClick={() => setFocusedMeal3(mealType)}
                                                 placeholder={`Wybierz ${mealTranslations[mealType]}`}
                                                 InputProps={{ readOnly: true }}
                                                 fullWidth
                                             />
-                                            {focusedMeal3 === mealType && (
+                                            {countSelectedMeals(mealPreferences3) < 2 && focusedMeal3 === mealType && (
                                                 <List sx={{ maxHeight: 200, overflowY: 'auto', border: '1px solid #ddd' }}>
                                                     {filteredMeals(mealType).map((meal) => (
-                                                        <ListItemButton key={meal.name} onClick={() => handleMealPreferenceChange(mealType, meal.name, 3)}>
-                                                            <ListItemText primary={meal.name} />
+                                                        <ListItemButton key={meal.name} onClick={() => handleMealPreferenceChange(mealType, meal.name, 3)} disabled={Object.values(mealPreferences3).includes(meal.name)}>
+                                                            <ListItemText primary={`${meal.name} (${meal.calories} kcal)`} />
                                                         </ListItemButton>
                                                     ))}
                                                 </List>

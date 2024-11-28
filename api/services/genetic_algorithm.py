@@ -238,6 +238,9 @@ def generate_initial_population(user_requirements, meal_number, size):
             else:
                 selected_breakfast2 = random.sample(breakfast2_recipes, k=1)
 
+        while not 'breakfast' in selected_tea[0]['meal_type']:
+            selected_tea = random.sample(tea_recipes, k=1)
+
         diet_plan = DietPlan(
             breakfast1=selected_breakfast1,
             breakfast2=selected_breakfast2,
@@ -424,15 +427,18 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
     while extra_generations <= max_extra_generations:
         for generation in range(generations):
             population.sort(key=lambda x: fitness(x, user_requirements), reverse=True)
-            new_population = population[:30]
+            new_population = population[:20]
 
-            while len(new_population) < 80:
-                parent1, parent2 = random.sample(new_population[:40], 2)
+            while len(new_population) < 60:
+                parent1, parent2 = random.sample(population[:30], 2)
 
                 crossover_breakfast1 = random.sample(parent1.breakfast1 + parent2.breakfast1, k=1)
                 crossover_breakfast2 = random.sample(parent1.breakfast2 + parent2.breakfast2, k=1)
                 crossover_lunch = random.sample(parent1.lunch + parent2.lunch, k=1)
-                crossover_tea = random.sample(parent1.tea + parent2.tea, k=1)
+                crossover_tea = random.sample(
+                    [recipe for recipe in (parent1.tea + parent2.tea) if 'breakfast' in recipe['meal_type']],
+                    k=1
+                )
                 crossover_dinners = random.sample(parent1.dinner + parent2.dinner, k=1)
 
                 while crossover_dinners[0] == crossover_lunch[0]:
@@ -494,7 +500,8 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
                     if random.random() < 0.5:
                         plan.lunch[0] = random.choice(lunch_recipes)
                     if random.random() < 0.5:
-                        plan.tea[0] = random.choice(tea_recipes)
+                        plan.tea[0] = random.choice(
+                            [recipe for recipe in tea_recipes if 'breakfast' in recipe['meal_type']])
                     if random.random() < 0.5:
                         plan.dinner[0] = random.choice(dinner_recipes)
 
@@ -523,11 +530,13 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
 
                     # Sprawdzenie, czy breakfast1 i tea mają taki sam typ "snack"
                     while 'snack' in plan.breakfast1[0]['meal_type'] and 'snack' in plan.tea[0]['meal_type']:
-                        plan.tea[0] = random.choice(dinner_recipes)
+                        plan.tea[0] = random.choice(
+                            [recipe for recipe in tea_recipes if 'breakfast' in recipe['meal_type']])
 
                     # Sprawdzenie, czy breakfast2 i tea mają taki sam typ "snack"
                     while 'snack' in plan.breakfast2[0]['meal_type'] and 'snack' in plan.tea[0]['meal_type']:
-                        plan.tea[0] = random.choice(dinner_recipes)
+                        plan.tea[0] = random.choice(
+                            [recipe for recipe in tea_recipes if 'breakfast' in recipe['meal_type']])
 
                     # Aktualizacja kalorii i makroskładników po mutacji
                     plan.recipes = plan.breakfast1 + plan.breakfast2 + plan.lunch + plan.tea + plan.dinner
@@ -544,7 +553,7 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
         fats_difference = abs(best_plan.macros['fats'] - user_requirements['fats'])
 
         if (calories_difference <= 100 and protein_difference <= 20 and carbs_difference <= 20 and fats_difference <= 10
-                and best_plan.calories_lunch > best_plan.calories_breakfast1 and best_plan.calories_lunch > best_plan.calories_dinner):
+                and best_plan.calories_lunch > best_plan.calories_breakfast1 and best_plan.calories_lunch > best_plan.calories_dinner and best_plan.calories_breakfast1 > best_plan.calories_breakfast2):
             print("Znaleziono plan")
             print("Najlepszy plan dietetyczny :")
             for recipe in best_plan.recipes:
