@@ -1,5 +1,5 @@
 import random
-
+import time
 from api.services.all_recipes import available_recipes
 from api.serializers import DietPlanSerializer
 
@@ -50,7 +50,6 @@ def prepare_user_requirements(preferences):
     }
 
     return user_requirements
-
 
 class DietPlan:
     def __init__(self, breakfast1, breakfast2, lunch, tea, dinner):
@@ -144,16 +143,31 @@ def generate_initial_population(user_requirements, meal_number, size):
         lunch_recipes = [recipe for recipe in available_recipes if
                          'lunch' in recipe['meal_type'] and recipe['name'] in user_requirements[
                              'required_lunch_1']]
+        if 0.30 >= lunch_recipes[0]['calories'] / user_requirements['calories'] or 0.35 <= lunch_recipes[0]['calories'] / user_requirements['calories'] :
+            lunch_recipes = [recipe for recipe in available_recipes if
+                             'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                                 ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                                 recipe['ingredients'])]
 
     elif user_requirements['required_lunch_2'] and meal_number == 1:
         lunch_recipes = [recipe for recipe in available_recipes if
                          'lunch' in recipe['meal_type'] and recipe['name'] in user_requirements[
                              'required_lunch_2']]
+        if 0.30 >= lunch_recipes[0]['calories'] / user_requirements['calories'] or 0.35 <= lunch_recipes[0]['calories'] / user_requirements['calories'] :
+            lunch_recipes = [recipe for recipe in available_recipes if
+                             'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                                 ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                                 recipe['ingredients'])]
 
     elif user_requirements['required_lunch_3'] and meal_number == 2:
         lunch_recipes = [recipe for recipe in available_recipes if
                          'lunch' in recipe['meal_type'] and recipe['name'] in user_requirements[
                              'required_lunch_3']]
+        if 0.30 >= lunch_recipes[0]['calories'] / user_requirements['calories'] or 0.35 <= lunch_recipes[0]['calories'] / user_requirements['calories'] :
+            lunch_recipes = [recipe for recipe in available_recipes if
+                             'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
+                                 ingredient in user_requirements['unwanted_ingredients'] for ingredient in
+                                 recipe['ingredients'])]
     else:
         lunch_recipes = [recipe for recipe in available_recipes if
                          'lunch' in recipe['meal_type'] and recipe['name'] not in used_recipes and not any(
@@ -241,6 +255,22 @@ def generate_initial_population(user_requirements, meal_number, size):
         while not 'breakfast' in selected_tea[0]['meal_type']:
             selected_tea = random.sample(tea_recipes, k=1)
 
+        while selected_lunch[0]['calories'] < selected_dinner[0]['calories']:
+            if user_requirements['required_dinner_1'] and meal_number == 0:
+                selected_lunch = random.sample(lunch_recipes, k=1)
+            if user_requirements['required_dinner_2'] and meal_number == 1:
+                selected_lunch = random.sample(lunch_recipes, k=1)
+            if user_requirements['required_dinner_3'] and meal_number == 2:
+                selected_lunch = random.sample(lunch_recipes, k=1)
+            if user_requirements['required_lunch_1'] and meal_number == 0:
+                selected_dinner = random.sample(dinner_recipes, k=1)
+            if user_requirements['required_lunch_2'] and meal_number == 1:
+                selected_dinner = random.sample(dinner_recipes, k=1)
+            if user_requirements['required_lunch_3'] and meal_number == 2:
+                selected_dinner = random.sample(dinner_recipes, k=1)
+            else:
+                selected_lunch = random.sample(lunch_recipes, k=1)
+
         diet_plan = DietPlan(
             breakfast1=selected_breakfast1,
             breakfast2=selected_breakfast2,
@@ -315,9 +345,9 @@ def fitness(plan, user_requirements):
     return score
 
 
-def genetic_algorithm(user_requirements, meal_number, generations, additional_generations, max_extra_generations):
+def genetic_algorithm(user_requirements, meal_number, generations, additional_generations, max_extra_generations, max_extra_reset):
     def generate_population():
-        return generate_initial_population(user_requirements, meal_number, 7000)
+        return generate_initial_population(user_requirements, meal_number, 10000)
 
     population = generate_population()
 
@@ -430,7 +460,7 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
             new_population = population[:20]
 
             while len(new_population) < 60:
-                parent1, parent2 = random.sample(population[:30], 2)
+                parent1, parent2 = random.sample(population[:20], 2)
 
                 crossover_breakfast1 = random.sample(parent1.breakfast1 + parent2.breakfast1, k=1)
                 crossover_breakfast2 = random.sample(parent1.breakfast2 + parent2.breakfast2, k=1)
@@ -492,18 +522,22 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
                              crossover_dinners))
 
             for plan in new_population:
-                if random.random() < 0.2:
-                    if random.random() < 0.5:
+
+                if random.random() < 0.05:
+                    random_number = random.randint(1, 5)
+
+                    if random_number == 1:
                         plan.breakfast1[0] = random.choice(breakfast1_recipes)
-                    if random.random() < 0.5:
+                    if random_number == 2:
                         plan.breakfast2[0] = random.choice(breakfast2_recipes)
-                    if random.random() < 0.5:
+                    if random_number == 3:
                         plan.lunch[0] = random.choice(lunch_recipes)
-                    if random.random() < 0.5:
+                    if random_number == 4:
                         plan.tea[0] = random.choice(
                             [recipe for recipe in tea_recipes if 'breakfast' in recipe['meal_type']])
-                    if random.random() < 0.5:
+                    if random_number == 5:
                         plan.dinner[0] = random.choice(dinner_recipes)
+
 
                     while plan.dinner[0] == plan.lunch[0]:
                         if user_requirements['required_dinner_1'] and meal_number == 0:
@@ -542,7 +576,6 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
                     plan.recipes = plan.breakfast1 + plan.breakfast2 + plan.lunch + plan.tea + plan.dinner
                     plan.calories = sum(recipe['calories'] for recipe in plan.recipes)
                     plan.macros = plan.calculate_macros()
-
             population = new_population
 
         best_plan = population[0]
@@ -552,8 +585,7 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
         carbs_difference = abs(best_plan.macros['carbs'] - user_requirements['carbs'])
         fats_difference = abs(best_plan.macros['fats'] - user_requirements['fats'])
 
-        if (calories_difference <= 100 and protein_difference <= 20 and carbs_difference <= 20 and fats_difference <= 10
-                and best_plan.calories_lunch > best_plan.calories_breakfast1 and best_plan.calories_lunch > best_plan.calories_dinner and best_plan.calories_breakfast1 > best_plan.calories_breakfast2):
+        if (calories_difference <= 100 and protein_difference <= 20 and carbs_difference <= 20 and fats_difference <= 10 and best_plan.calories_lunch > best_plan.calories_dinner):
             print("Znaleziono plan")
             print("Najlepszy plan dietetyczny :")
             for recipe in best_plan.recipes:
@@ -569,12 +601,14 @@ def genetic_algorithm(user_requirements, meal_number, generations, additional_ge
             print("Kalorie kolacja:", best_plan.calories_dinner)
             print()
             print("Makroskładniki:", best_plan.macros)
-
             return best_plan.to_dict()
         else:
             print("Nie znaleziono, szukam dalej")
             generations = additional_generations
             extra_generations += 1
+
+        if stop > max_extra_reset:
+            break
 
         if extra_generations > max_extra_generations:
             print("Nie znaleziono odpowiedniego planu, resetowanie populacji...")

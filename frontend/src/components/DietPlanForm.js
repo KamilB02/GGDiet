@@ -77,16 +77,31 @@ function DietPlanForm() {
     );
 
     const filteredMeals = (mealType) => {
+        // Znajdź wybrane snacki w innych mealType
+        const selectedSnacks = Object.entries(mealPreferences1)
+            .filter(([key, value]) => key !== mealType && value && isSnack(value)) // Wyklucz bieżący mealType i sprawdź, czy to snack
+            .map(([, value]) => value); // Pobierz nazwy wybranych snacków
+
         const meals = allRecipes.filter(
             (recipe) =>
-                recipe.meal_type.includes(mealType) ||
-                (mealType === 'secondBreakfast' && recipe.meal_type.includes('breakfast')) ||
-                (mealType === 'tea' && recipe.meal_type.includes('breakfast'))
+                (recipe.meal_type.includes(mealType) ||
+                    (mealType === 'secondBreakfast' && recipe.meal_type.includes('breakfast') &&
+                !selectedSnacks.includes(recipe.name)) ||
+                    (mealType === 'tea' && recipe.meal_type.includes('breakfast'))) &&
+                !selectedSnacks.includes(recipe.name) // Wyklucz już wybrane snacki
         );
+
         return meals.filter((recipe) =>
             recipe.name.toLowerCase().includes(mealInput.toLowerCase())
         );
     };
+
+    const isSnack = (mealName) => {
+    const meal = allRecipes.find((recipe) => recipe.name === mealName);
+    return meal && meal.meal_type.includes('snack'); // Zakładamy, że posiłki mają pole 'meal_type'
+    };
+
+
 
     const handleAddIngredient = (ingredient) => {
         if (ingredient && !avoidedIngredients.includes(ingredient) && avoidedIngredients.length < 4) {
@@ -247,7 +262,7 @@ function DietPlanForm() {
                                             {countSelectedMeals(mealPreferences1) < 2 && focusedMeal1 === mealType && (
                                                 <List sx={{ maxHeight: 200, overflowY: 'auto', border: '1px solid #ddd' }}>
                                                     {filteredMeals(mealType).map((meal) => (
-                                                        <ListItemButton key={meal.name} onClick={() => handleMealPreferenceChange(mealType, meal.name, 1)} disabled={Object.values(mealPreferences1).includes(meal.name)}>
+                                                        <ListItemButton key={meal.name} onClick={() => handleMealPreferenceChange(mealType, meal.name, 1)} disabled={isSnack(meal.name) && Object.values(mealPreferences1).includes(meal.name)}>
                                                             <ListItemText primary={`${meal.name} (${meal.calories} kcal)`} />
                                                         </ListItemButton>
                                                     ))}

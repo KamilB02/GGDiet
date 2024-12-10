@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from .models import DietPlan, UserInfo
+from .models import DietPlan, UserInfo,Meal
 from rest_framework import serializers
 
 class UserInfoSerializer(serializers.ModelSerializer):
@@ -18,7 +18,19 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+class MealSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Meal
+        fields = ['id', 'name', 'calories', 'macros_protein', 'macros_carbs', 'macros_fats', 'ingredients']
+
 class DietPlanSerializer(serializers.ModelSerializer):
+    breakfast1 = MealSerializer(many=True)
+    breakfast2 = MealSerializer(many=True)
+    lunch = MealSerializer(many=True)
+    tea = MealSerializer(many=True)
+    dinner = MealSerializer(many=True)
+
     class Meta:
         model = DietPlan
-        fields = ['name', 'calories', 'meal_type', 'ingredients',]
+        fields = ['id', 'name', 'calories_total', 'macros_protein', 'macros_carbs', 'macros_fats',
+                  'breakfast1', 'breakfast2', 'lunch', 'tea', 'dinner']

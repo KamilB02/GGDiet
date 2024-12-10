@@ -439,6 +439,7 @@ available_recipes = [
     {'name': 'Grillowana pierś z kurczaka z batatami', 'calories': 450,
      'macros': {'protein': 35, 'carbs': 40, 'fats': 15}, 'meal_type': ['lunch', 'dinner'],
      'ingredients': ['pierś z kurczaka', 'bataty', 'oliwa z oliwek', 'czosnek', 'sól', 'pieprz']},
+
     {'name': 'Podwójna porcja grillowanej piersi z kurczaka z batatami', 'calories': 900,
      'macros': {'protein': 70, 'carbs': 80, 'fats': 30}, 'meal_type': ['lunch', 'dinner'],
      'ingredients': ['pierś z kurczaka', 'bataty', 'oliwa z oliwek', 'czosnek', 'sól', 'pieprz']},
@@ -454,6 +455,7 @@ available_recipes = [
      'macros': {'protein': 25, 'carbs': 65, 'fats': 15}, 'meal_type': ['lunch', 'dinner'],
      'ingredients': ['makaron pełnoziarnisty', 'mielona wołowina', 'pomidory', 'czosnek', 'cebula',
                      'przyprawy (bazylia, oregano)', 'oliwa z oliwek']},
+
     {'name': 'Podwójny makaron pełnoziarnisty z sosem bolońskim', 'calories': 1000,
      'macros': {'protein': 50, 'carbs': 130, 'fats': 30}, 'meal_type': ['lunch', 'dinner'],
      'ingredients': ['makaron', 'wołowina', 'pomidory', 'czosnek', 'cebula',
@@ -462,6 +464,7 @@ available_recipes = [
     {'name': 'Sałatka grecka', 'calories': 250, 'macros': {'protein': 7, 'carbs': 20, 'fats': 15},
      'meal_type': ['lunch', 'snack'],
      'ingredients': ['pomidor', 'ogórek', 'cebula', 'feta', 'oliwki', 'oliwa z oliwek', 'oregano']},
+
     {'name': 'Podwójna porcja sałatki greckiej', 'calories': 500, 'macros': {'protein': 14, 'carbs': 40, 'fats': 30},
      'meal_type': ['lunch', 'snack'],
      'ingredients': ['pomidor', 'ogórek', 'cebula', 'feta', 'oliwki', 'oliwa z oliwek', 'oregano']},
@@ -476,6 +479,7 @@ available_recipes = [
     {'name': 'Placuszki bananowe', 'calories': 300, 'macros': {'protein': 8, 'carbs': 45, 'fats': 10},
      'meal_type': ['breakfast', 'snack'],
      'ingredients': ['banan', 'mąka', 'jajka', 'mleko roślinne', 'proszek do pieczenia', 'olej kokosowy']},
+
     {'name': 'Podwójna porcja placuszków bananowych', 'calories': 600,
      'macros': {'protein': 16, 'carbs': 90, 'fats': 20}, 'meal_type': ['breakfast', 'snack'],
      'ingredients': ['banan', 'mąka', 'jajka', 'mleko roślinne', 'proszek do pieczenia', 'olej kokosowy']},
@@ -503,6 +507,7 @@ available_recipes = [
     {'name': 'Wrap z tuńczykiem i warzywami', 'calories': 350, 'macros': {'protein': 25, 'carbs': 40, 'fats': 10},
      'meal_type': ['lunch', 'snack'],
      'ingredients': ['tortilla', 'tuńczyk', 'sałata', 'papryka', 'ogórek', 'oliwa z oliwek']},
+
     {'name': 'Podwójny wrap z tuńczykiem i warzywami', 'calories': 700,
      'macros': {'protein': 50, 'carbs': 80, 'fats': 20}, 'meal_type': ['lunch', 'snack'],
      'ingredients': ['tortilla', 'ryba', 'sałata', 'papryka', 'ogórek', 'oliwa z oliwek']},

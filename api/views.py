@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 from rest_framework import generics
 from .serializers import UserSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import DietPlan, UserInfo
-from .serializers import DietPlanSerializer, UserInfoSerializer
+from .models import UserInfo
+from .serializers import UserInfoSerializer, DietPlanSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -105,7 +105,7 @@ class GenerateDietView(APIView):
 
         def run_genetic_algorithm_with_timeout(user_requirements, timeout):
             def run_algorithm():
-                return [genetic_algorithm(user_requirements, _, 2000, 2000, 7) for _ in range(3)]
+                return [genetic_algorithm(user_requirements, _, 2000, 2000, 7, 2) for _ in range(3)]
 
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 future = executor.submit(run_algorithm)
@@ -125,3 +125,12 @@ class GenerateDietView(APIView):
             return JsonResponse({'error': 'Operacja przekroczyła limit czasu'}, status=status.HTTP_408_REQUEST_TIMEOUT)
 
         return JsonResponse( {'diet_plans': diet_plans}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def save_diet(request):
+    if request.method == 'POST':
+        serializer = DietPlanSerializer(data=request.data)
+        if serializer.is_valid():
+            diet = serializer.save(user=request.user)  # Przypisanie diety do zalogowanego użytkownika
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
