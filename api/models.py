@@ -16,32 +16,3 @@ class UserInfo(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Information"
-
-
-class Meal(models.Model):
-    name = models.CharField(max_length=255)
-    calories = models.IntegerField()
-    macros_protein = models.FloatField()
-    macros_carbs = models.FloatField()
-    macros_fats = models.FloatField()
-    ingredients = models.JSONField()  # Przechowywanie składników jako lista
-
-    def __str__(self):
-        return self.name
-
-
-class DietPlan(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    calories_total = models.IntegerField()
-    macros_protein = models.FloatField()
-    macros_carbs = models.FloatField()
-    macros_fats = models.FloatField()
-    breakfast1 = models.ManyToManyField(Meal, related_name='breakfast1_meals', blank=True)
-    breakfast2 = models.ManyToManyField(Meal, related_name='breakfast2_meals', blank=True)
-    lunch = models.ManyToManyField(Meal, related_name='lunch_meals', blank=True)
-    tea = models.ManyToManyField(Meal, related_name='tea_meals', blank=True)
-    dinner = models.ManyToManyField(Meal, related_name='dinner_meals', blank=True)
-
-    def __str__(self):
-        return self.name

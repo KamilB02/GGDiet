@@ -12,7 +12,6 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Sprawdzenie, czy hasła są zgodne
     if (password !== confirmPassword) {
       alert('Hasła nie są zgodne. Spróbuj ponownie.');
       return;
@@ -26,7 +25,7 @@ const Register = () => {
 
       if (response.status === 201) {
         alert('Rejestracja zakończona sukcesem!');
-        navigate('/login'); // Przekierowanie na stronę logowania
+        navigate('/login');
       }
     } catch (error) {
       if (error.response) {

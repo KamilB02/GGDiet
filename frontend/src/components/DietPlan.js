@@ -17,7 +17,7 @@ const DietResult = () => {
     useEffect(() => {
         const storedDietPlans = localStorage.getItem("dietPlans");
         if (storedDietPlans) {
-            setDietPlans(JSON.parse(storedDietPlans)); // Pobierz wszystkie plany
+            setDietPlans(JSON.parse(storedDietPlans));
         } else {
             console.error("No diet plans found in Local Storage");
         }
@@ -42,7 +42,6 @@ const DietResult = () => {
                         Plan diety {planIndex + 1}
                     </Typography>
                     <Grid container spacing={3}>
-                        {/* Podsumowanie kalorii */}
                         <Grid item xs={12}>
                             <Card>
                                 <CardContent>
@@ -65,7 +64,6 @@ const DietResult = () => {
                             </Card>
                         </Grid>
 
-                        {/* Szczegóły posiłków */}
                         {["breakfast1", "breakfast2", "lunch", "tea", "dinner"].map(
                             (mealKey, index) => (
                                 <Grid item xs={12} sm={6} md={4} key={index}>

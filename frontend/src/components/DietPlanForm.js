@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Typography, TextField, Chip, List, ListItemButton, ListItemText, Grid, Paper, CircularProgress } from '@mui/material';
-import Navbar from './Navbar'; // Import Navbar
+import Navbar from './Navbar';
 
 function DietPlanForm() {
     const navigate = useNavigate();
@@ -35,9 +35,8 @@ function DietPlanForm() {
     const [focusedMeal2, setFocusedMeal2] = useState(null);
     const [focusedMeal3, setFocusedMeal3] = useState(null);
     const [username, setUsername] = useState('');
-    const [loading, setLoading] = useState(false);  // Stan ładowania
+    const [loading, setLoading] = useState(false);
 
-    // Mapa tłumaczeń posiłków
     const mealTranslations = {
         breakfast: 'Śniadanie',
         secondBreakfast: 'Drugie śniadanie',
@@ -77,10 +76,9 @@ function DietPlanForm() {
     );
 
     const filteredMeals = (mealType) => {
-        // Znajdź wybrane snacki w innych mealType
         const selectedSnacks = Object.entries(mealPreferences1)
-            .filter(([key, value]) => key !== mealType && value && isSnack(value)) // Wyklucz bieżący mealType i sprawdź, czy to snack
-            .map(([, value]) => value); // Pobierz nazwy wybranych snacków
+            .filter(([key, value]) => key !== mealType && value && isSnack(value))
+            .map(([, value]) => value);
 
         const meals = allRecipes.filter(
             (recipe) =>
@@ -88,7 +86,7 @@ function DietPlanForm() {
                     (mealType === 'secondBreakfast' && recipe.meal_type.includes('breakfast') &&
                 !selectedSnacks.includes(recipe.name)) ||
                     (mealType === 'tea' && recipe.meal_type.includes('breakfast'))) &&
-                !selectedSnacks.includes(recipe.name) // Wyklucz już wybrane snacki
+                !selectedSnacks.includes(recipe.name)
         );
 
         return meals.filter((recipe) =>
@@ -98,17 +96,17 @@ function DietPlanForm() {
 
     const isSnack = (mealName) => {
     const meal = allRecipes.find((recipe) => recipe.name === mealName);
-    return meal && meal.meal_type.includes('snack'); // Zakładamy, że posiłki mają pole 'meal_type'
+    return meal && meal.meal_type.includes('snack');
     };
 
 
 
     const handleAddIngredient = (ingredient) => {
-        if (ingredient && !avoidedIngredients.includes(ingredient) && avoidedIngredients.length < 4) {
+        if (ingredient && !avoidedIngredients.includes(ingredient) && avoidedIngredients.length < 10) {
             setAvoidedIngredients([...avoidedIngredients, ingredient]);
             setIngredientInput('');
-        } else if (avoidedIngredients.length >= 5) {
-            alert('Możesz dodać maksymalnie 5 składniki do unikania.');
+        } else if (avoidedIngredients.length >= 10) {
+            alert('Maksymalna ilość składników.');
         }
     };
 
@@ -134,10 +132,9 @@ function DietPlanForm() {
 
         const selectedMeals = Object.values(mealPreferences);
 
-        // Sprawdzenie, czy posiłek już został wybrany w tym zestawie
         if (selectedMeals.includes(mealName) && mealPreferences[mealType] !== mealName) {
             alert('To danie zostało już wybrane w tym zestawie. Wybierz inne danie.');
-            return;  // Zatrzymanie dalszego działania
+            return;
         }
 
         const selectedCount = countSelectedMeals(mealPreferences);
@@ -169,7 +166,7 @@ function DietPlanForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);  // Rozpoczęcie ładowania
+        setLoading(true);
 
         const preferences = {
             mealPreferences1,
@@ -190,10 +187,16 @@ function DietPlanForm() {
             navigate('/diet-result');
         } catch (error) {
             console.error('Error generating diet:', error);
-            alert('Wystąpił błąd podczas generowania diety.');
-        } finally {
-            setLoading(false);  // Zakończenie ładowania
+
+        if (error.response && error.response.status === 401) {
+            alert('Musisz być zalogowany, aby wygenerować dietę.');
+            navigate('/login');
+        } else {
+            alert('Wystąpił błąd podczas generowania diety. Sprawdź, czy poprawnie uzupełniłeś dane.');
         }
+        } finally {
+            setLoading(false);
+}
     };
 
     return (
@@ -202,10 +205,10 @@ function DietPlanForm() {
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f4f4f9', padding: 3 }}>
                 <Paper elevation={3} sx={{ maxWidth: 600, width: '100%', padding: 4 }}>
                     <Typography variant="h4" align="center" gutterBottom>Planowanie diety</Typography>
-                    <Typography variant="h6" align="center" sx={{ color: 'blue', marginBottom: 4 }}  gutterBottom>Podczas generowania diety pamiętaj, dając za dużo ograniczeń jest szansa że algorytm nie zadziała  </Typography>
+                    <Typography variant="h6" align="center" sx={{ color: 'blue', marginBottom: 4 }}  gutterBottom>Podczas generowania diety należy pamiętać, że wprowadzenie zbyt wielu ograniczeń lub parametrów niezgodnych z wymaganiami kalorycznymi może skutkować nieprawidłowym działaniem algorytmu</Typography>
                     <form onSubmit={handleSubmit}>
                         <Box sx={{ mb: 3 }}>
-                            <Typography variant="h6" gutterBottom>Produkty do unikania (maksymalnie 5):</Typography>
+                            <Typography variant="h6" gutterBottom>Produkty do unikania (maksymalnie 10):</Typography>
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                                 <TextField
                                     value={ingredientInput}
@@ -231,13 +234,13 @@ function DietPlanForm() {
                             </Box>
                         </Box>
 
-                        {/* Zestaw 1 */}
+
                         <Box sx={{ mb: 3 }}>
                             <Typography variant="h6" gutterBottom>Preferencje posiłków (Zestaw 1):</Typography>
                             <Typography
                                 variant="h9"
                                 gutterBottom
-                                sx={{ color: 'blue'}} // kolor niebieski
+                                sx={{ color: 'blue'}}
                             >
                                 Możesz wybrać maksymalnie 2 posiłki na zestaw
                             </Typography>
@@ -280,7 +283,7 @@ function DietPlanForm() {
                             </Grid>
                         </Box>
 
-                        {/* Zestaw 2 */}
+
                         <Box sx={{ mb: 3 }}>
                             <Typography variant="h6" gutterBottom>Preferencje posiłków (Zestaw 2):</Typography>
                             <Grid container spacing={2}>
@@ -319,7 +322,7 @@ function DietPlanForm() {
                             </Grid>
                         </Box>
 
-                        {/* Zestaw 3 */}
+
                         <Box sx={{ mb: 3 }}>
                             <Typography variant="h6" gutterBottom>Preferencje posiłków (Zestaw 3):</Typography>
                             <Grid container spacing={2}>

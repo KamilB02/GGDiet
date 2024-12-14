@@ -7,7 +7,7 @@ from rest_framework import generics
 from .serializers import UserSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import UserInfo
-from .serializers import UserInfoSerializer, DietPlanSerializer
+from .serializers import UserInfoSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -18,7 +18,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 import logging
 import uuid
 import concurrent.futures
-import time
+
 
 logger = logging.getLogger(__name__)
 
@@ -103,21 +103,11 @@ class GenerateDietView(APIView):
             'fats': daily_macros[2],
         })
 
-        def run_genetic_algorithm_with_timeout(user_requirements, timeout):
-            def run_algorithm():
-                return [genetic_algorithm(user_requirements, _, 2000, 2000, 7, 2) for _ in range(3)]
-
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                future = executor.submit(run_algorithm)
-                try:
-                    result = future.result(timeout=timeout)
-                    return result
-                except concurrent.futures.TimeoutError:
-                    print("Operacja przekroczyła limit czasu!")
-                    return None
+        def run_genetic_algorithm(user_requirements):
+            return [genetic_algorithm(user_requirements, _, 2000, 1000, 4, 5) for _ in range(3)]
 
         user_requirements = prepare_user_requirements(preferences)
-        diet_plans = run_genetic_algorithm_with_timeout(user_requirements, 60)
+        diet_plans = run_genetic_algorithm(user_requirements)
 
         used_recipes.clear()
 
@@ -125,12 +115,3 @@ class GenerateDietView(APIView):
             return JsonResponse({'error': 'Operacja przekroczyła limit czasu'}, status=status.HTTP_408_REQUEST_TIMEOUT)
 
         return JsonResponse( {'diet_plans': diet_plans}, status=status.HTTP_200_OK)
-
-@api_view(['POST'])
-def save_diet(request):
-    if request.method == 'POST':
-        serializer = DietPlanSerializer(data=request.data)
-        if serializer.is_valid():
-            diet = serializer.save(user=request.user)  # Przypisanie diety do zalogowanego użytkownika
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

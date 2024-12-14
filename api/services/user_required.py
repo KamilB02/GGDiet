@@ -40,7 +40,7 @@ def calculate_calories(user_info):
     elif objective == 'same':
         total_calories = total_calories - 50
     elif objective == 'more':
-        total_calories = total_calories + 150
+        total_calories = total_calories + 300
 
     return total_calories
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Button, Typography, MenuItem, Grid, Paper } from '@mui/material';
-import Navbar from './Navbar'; // Import Navbar
+import Navbar from './Navbar';
 
 const UserInfoForm = () => {
     const [formData, setFormData] = useState({
@@ -37,7 +37,7 @@ const UserInfoForm = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                setFormData(response.data); // Ustawienie danych w formularzu
+                setFormData(response.data);
             } catch (error) {
                 console.error('Błąd podczas pobierania danych użytkownika:', error);
             }
@@ -68,13 +68,19 @@ const UserInfoForm = () => {
             navigate('/dietplan');
         } catch (error) {
             console.error('Błąd:', error);
+
+        if (error.response && error.response.status === 401) {
+            alert('Musisz być zalogowany, aby wygenerować dietę.');
+            navigate('/login');
+        }else {
             alert('Wystąpił problem z zapisaniem danych!');
+            }
         }
     };
 
     return (
         <Box>
-            <Navbar username={username} /> {/* Dodanie Navbar */}
+            <Navbar username={username} />
             <Box
                 sx={{
                     display: 'flex',

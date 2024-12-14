@@ -7,7 +7,7 @@ available_recipes = [
 
     {'name': 'Zupa jarzynowa', 'calories': 150, 'macros': {'protein': 5, 'carbs': 25, 'fats': 5},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['marchewka', 'pietruszka', 'ziemniaki', 'por', 'bulion warzywny']},
+     'ingredients': ['marchew', 'pietruszka', 'ziemniaki', 'por', 'bulion warzywny']},
 
     {'name': 'Omlet warzywny', 'calories': 250, 'macros': {'protein': 18, 'carbs': 10, 'fats': 15},
      'meal_type': ['breakfast'], 'ingredients': ['jajka', 'papryka', 'szpinak', 'cebula', 'sól', 'pieprz']},
@@ -16,16 +16,16 @@ available_recipes = [
      'meal_type': ['lunch', 'dinner'], 'ingredients': ['ryż', 'tofu', 'papryka', 'cukinia', 'sos sojowy']},
 
     {'name': 'Kanapka z awokado i jajkiem', 'calories': 350, 'macros': {'protein': 12, 'carbs': 30, 'fats': 20},
-     'meal_type': ['breakfast', 'lunch'], 'ingredients': ['chleb', 'awokado', 'jajka', 'szpinak', 'sól', 'pieprz']},
+     'meal_type': ['breakfast'], 'ingredients': ['chleb', 'awokado', 'jajka', 'szpinak', 'sól', 'pieprz']},
 
     {'name': 'Kurczak z kaszą bulgur', 'calories': 450, 'macros': {'protein': 35, 'carbs': 45, 'fats': 10},
      'meal_type': ['lunch', 'dinner'], 'ingredients': ['kurczak', 'kasza bulgur', 'papryka', 'cukinia', 'oliwa']},
 
     {'name': 'Pasta z soczewicą', 'calories': 400, 'macros': {'protein': 20, 'carbs': 60, 'fats': 8},
-     'meal_type': ['lunch', 'dinner'], 'ingredients': ['makaron', 'soczewica', 'pomidory', 'czosnek', 'bazylia']},
+     'meal_type': ['lunch', 'dinner'], 'ingredients': ['makaron', 'soczewica', 'pomidor', 'czosnek', 'bazylia']},
 
     {'name': 'Łosoś z batatami', 'calories': 500, 'macros': {'protein': 35, 'carbs': 40, 'fats': 20},
-     'meal_type': ['dinner'], 'ingredients': ['ryba', 'bataty', 'szpinak', 'cytryna', 'przyprawy']},
+     'meal_type': ['dinner'], 'ingredients': ['ryba', 'bataty', 'szpinak', 'cytryna', 'sól','pieprz']},
 
     {'name': 'Sałatka grecka', 'calories': 220, 'macros': {'protein': 8, 'carbs': 10, 'fats': 15},
      'meal_type': ['lunch', 'dinner'], 'ingredients': ['sałata', 'pomidor', 'ogórek', 'ser feta', 'oliwki', 'oliwa']},
@@ -34,10 +34,10 @@ available_recipes = [
      'meal_type': ['breakfast', 'snack'], 'ingredients': ['banan', 'szpinak', 'mleko', 'miód']},
 
     {'name': 'Indyk z ryżem i brokułami', 'calories': 450, 'macros': {'protein': 40, 'carbs': 50, 'fats': 8},
-     'meal_type': ['lunch', 'dinner'], 'ingredients': ['indyk', 'ryż', 'brokuły', 'przyprawy']},
+     'meal_type': ['lunch', 'dinner'], 'ingredients': ['indyk', 'ryż', 'brokuły', 'sól', 'pieprz']},
 
     {'name': 'Pieczone warzywa z komosą ryżową', 'calories': 300, 'macros': {'protein': 10, 'carbs': 45, 'fats': 8},
-     'meal_type': ['lunch', 'dinner'], 'ingredients': ['komosa ryżowa', 'cukinia', 'papryka', 'oliwa', 'przyprawy']},
+     'meal_type': ['lunch', 'dinner'], 'ingredients': ['komosa ryżowa', 'cukinia', 'papryka', 'oliwa', 'sól', 'pieprz']},
 
     {'name': 'Placuszki owsiane', 'calories': 290, 'macros': {'protein': 10, 'carbs': 40, 'fats': 10},
      'meal_type': ['breakfast'], 'ingredients': ['płatki owsiane', 'jajka', 'banan', 'cynamon']},
@@ -49,22 +49,22 @@ available_recipes = [
      'meal_type': ['dinner'], 'ingredients': ['batat', 'kurczak', 'szpinak', 'czosnek', 'ser']},
 
     {'name': 'Makaron z warzywami i tofu', 'calories': 400, 'macros': {'protein': 15, 'carbs': 65, 'fats': 8},
-     'meal_type': ['lunch', 'dinner'], 'ingredients': ['makaron', 'tofu', 'cukinia', 'pomidory', 'bazylia']},
+     'meal_type': ['lunch', 'dinner'], 'ingredients': ['makaron', 'tofu', 'cukinia', 'pomidor', 'bazylia']},
 
     {'name': 'Gulasz warzywny z ciecierzycą', 'calories': 370, 'macros': {'protein': 20, 'carbs': 45, 'fats': 12},
-     'meal_type': ['lunch', 'dinner'], 'ingredients': ['ciecierzyca', 'marchewka', 'papryka', 'pomidory', 'przyprawy']},
+     'meal_type': ['lunch', 'dinner'], 'ingredients': ['ciecierzyca', 'marchew', 'papryka', 'pomidor', 'sól', 'pieprz']},
 
-    {'name': 'Kanapka z masłem orzechowym', 'calories': 280, 'macros': {'protein': 8, 'carbs': 25, 'fats': 18},
+    {'name': 'Kanapka z masłem orzechowym', 'calories': 290, 'macros': {'protein': 8, 'carbs': 25, 'fats': 18},
      'meal_type': ['breakfast', 'snack'], 'ingredients': ['chleb', 'masło orzechowe', 'banan']},
 
     {'name': 'Budyń chia z owocami', 'calories': 200, 'macros': {'protein': 5, 'carbs': 30, 'fats': 8},
      'meal_type': ['breakfast', 'snack'], 'ingredients': ['chia', 'mleko', 'owoce', 'miód']},
 
     {'name': 'Ryż z fasolą i warzywami', 'calories': 350, 'macros': {'protein': 12, 'carbs': 60, 'fats': 6},
-     'meal_type': ['lunch', 'dinner'], 'ingredients': ['ryż', 'fasola', 'papryka', 'cebula', 'przyprawy']},
+     'meal_type': ['lunch', 'dinner'], 'ingredients': ['ryż', 'fasola', 'papryka', 'cebula', 'sól', 'pieprz']},
 
     {'name': 'Kanapka z szynką i warzywami', 'calories': 300, 'macros': {'protein': 15, 'carbs': 35, 'fats': 10},
-     'meal_type': ['breakfast', 'lunch'], 'ingredients': ['chleb', 'szynka', 'sałata', 'pomidor', 'ogórek']},
+     'meal_type': ['breakfast'], 'ingredients': ['chleb', 'szynka', 'sałata', 'pomidor', 'ogórek']},
 
     {'name': 'Sałatka z tuńczykiem', 'calories': 250, 'macros': {'protein': 20, 'carbs': 10, 'fats': 15},
      'meal_type': ['lunch', 'dinner'], 'ingredients': ['ryba', 'sałata', 'ogórek', 'papryka', 'oliwki']},
@@ -73,10 +73,10 @@ available_recipes = [
      'meal_type': ['breakfast'], 'ingredients': ['płatki owsiane', 'mleko', 'owoce', 'miód']},
 
     {'name': 'Kurczak z warzywami', 'calories': 380, 'macros': {'protein': 30, 'carbs': 20, 'fats': 15},
-     'meal_type': ['lunch', 'dinner'], 'ingredients': ['kurczak', 'cukinia', 'marchewka', 'papryka', 'przyprawy']},
+     'meal_type': ['lunch', 'dinner'], 'ingredients': ['kurczak', 'cukinia', 'marchew', 'papryka', 'sól', 'pieprz']},
 
     {'name': 'Zupa krem z dyni', 'calories': 180, 'macros': {'protein': 4, 'carbs': 25, 'fats': 8},
-     'meal_type': ['lunch', 'dinner'], 'ingredients': ['dynia', 'bulion', 'cebula', 'czosnek', 'przyprawy']},
+     'meal_type': ['lunch', 'dinner'], 'ingredients': ['dynia', 'bulion', 'cebula', 'czosnek', 'sól', 'pieprz']},
 
     {'name': 'Makaron pełnoziarnisty z sosem pomidorowym', 'calories': 330,
      'macros': {'protein': 10, 'carbs': 60, 'fats': 6},
@@ -95,7 +95,7 @@ available_recipes = [
 
     {'name': 'Curry z ciecierzycą', 'calories': 380,
      'macros': {'protein': 15, 'carbs': 50, 'fats': 15},
-     'ingredients': ['ciecierzyca', 'mleko kokosowe', 'pomidory', 'cebula', 'przyprawy curry'],
+     'ingredients': ['ciecierzyca', 'mleko kokosowe', 'pomidor', 'cebula', 'przyprawa curry'],
      'meal_type': ['lunch', 'dinner']},
 
     {'name': 'Batony energetyczne owsiane', 'calories': 200,
@@ -120,13 +120,13 @@ available_recipes = [
 
     {'name': 'Chili z fasolą i warzywami', 'calories': 400,
      'macros': {'protein': 18, 'carbs': 50, 'fats': 12},
-     'ingredients': ['fasola', 'papryka', 'pomidor', 'cebula', 'czosnek', 'przyprawy chili'],
+     'ingredients': ['fasola', 'papryka', 'pomidor', 'cebula', 'czosnek', 'przyprawa chili'],
      'meal_type': ['lunch', 'dinner']},
 
     {'name': 'Tosty z jajkiem i szpinakiem', 'calories': 310,
      'macros': {'protein': 15, 'carbs': 35, 'fats': 12},
      'ingredients': ['chleb', 'jajka', 'szpinak', 'oliwa z oliwek'],
-     'meal_type': ['breakfast', 'lunch']},
+     'meal_type': ['breakfast']},
 
     {'name': 'Ryż z pieczarkami i brokułami', 'calories': 330,
      'macros': {'protein': 10, 'carbs': 50, 'fats': 8},
@@ -150,8 +150,8 @@ available_recipes = [
 
     {'name': 'Kanapka z hummusem i pomidorem', 'calories': 280,
      'macros': {'protein': 7, 'carbs': 35, 'fats': 10},
-     'ingredients': ['chleb', 'hummus', 'pomidory', 'rukola'],
-     'meal_type': ['breakfast', 'lunch']},
+     'ingredients': ['chleb', 'hummus', 'pomidor', 'rukola'],
+     'meal_type': ['breakfast']},
 
     {'name': 'Koktajl białkowy z owocami leśnymi', 'calories': 250,
      'macros': {'protein': 20, 'carbs': 35, 'fats': 5},
@@ -165,7 +165,7 @@ available_recipes = [
 
     {'name': 'Makaron z pomidorami i bazylią', 'calories': 350,
      'macros': {'protein': 12, 'carbs': 55, 'fats': 10},
-     'ingredients': ['makaron', 'pomidory', 'bazylia', 'czosnek', 'oliwa z oliwek'],
+     'ingredients': ['makaron', 'pomidor', 'bazylia', 'czosnek', 'oliwa z oliwek'],
      'meal_type': ['lunch', 'dinner']},
 
     {'name': 'Budyń jaglany z owocami', 'calories': 240, 'macros': {'protein': 6, 'carbs': 35, 'fats': 8},
@@ -174,31 +174,31 @@ available_recipes = [
 
     {'name': 'Szaszłyki warzywne z tofu', 'calories': 300, 'macros': {'protein': 15, 'carbs': 30, 'fats': 12},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['tofu', 'papryka', 'cukinia', 'cebula', 'oliwa z oliwek', 'przyprawy (np. papryka, czosnek)']},
+     'ingredients': ['tofu', 'papryka', 'cukinia', 'cebula', 'oliwa z oliwek', 'przyprawa papryka', 'przyprawa czosnek']},
 
     {'name': 'Jajka sadzone z pomidorami i rukolą', 'calories': 250, 'macros': {'protein': 14, 'carbs': 5, 'fats': 18},
-     'meal_type': ['breakfast'], 'ingredients': ['jajka', 'pomidory', 'rukola', 'oliwa z oliwek']},
+     'meal_type': ['breakfast'], 'ingredients': ['jajka', 'pomidor', 'rukola', 'oliwa z oliwek']},
 
     {'name': 'Placuszki z cukinii', 'calories': 280, 'macros': {'protein': 10, 'carbs': 30, 'fats': 12},
      'meal_type': ['breakfast', 'lunch'],
-     'ingredients': ['cukinia', 'jajka', 'mąka', 'czosnek', 'przyprawy (np. sól, pieprz)', 'oliwa z oliwek']},
+     'ingredients': ['cukinia', 'jajka', 'mąka', 'czosnek', 'sól', 'pieprz', 'oliwa z oliwek']},
 
     {'name': 'Kurczak curry z warzywami', 'calories': 380, 'macros': {'protein': 30, 'carbs': 25, 'fats': 15},
      'meal_type': ['lunch', 'dinner'],
      'ingredients': ['pierś z kurczaka', 'mleko kokosowe', 'marchew', 'papryka', 'cebula', 'czosnek',
-                     'przyprawy curry']},
+                     'przyprawa curry']},
 
     {'name': 'Owsianka z cynamonem i orzechami', 'calories': 320, 'macros': {'protein': 10, 'carbs': 40, 'fats': 10},
      'meal_type': ['breakfast'], 'ingredients': ['płatki owsiane', 'mleko', 'cynamon', 'orzechy', 'miód']},
 
     {'name': 'Pieczone bataty z fasolą i kukurydzą', 'calories': 350, 'macros': {'protein': 12, 'carbs': 60, 'fats': 8},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['bataty', 'fasola', 'kukurydza', 'oliwa z oliwek', 'przyprawy (np. papryka, czosnek)']},
+     'ingredients': ['bataty', 'fasola', 'kukurydza', 'oliwa z oliwek', 'przyprawa papryka', 'przyprawa czosnek']},
 
     {'name': 'Makaron z cukinią i suszonymi pomidorami', 'calories': 400,
      'macros': {'protein': 15, 'carbs': 65, 'fats': 8},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['makaron', 'cukinia', 'suszony pomidor', 'czosnek', 'oliwa z oliwek', 'bazylia']},
+     'ingredients': ['makaron', 'cukinia', 'suszone pomidory', 'czosnek', 'oliwa z oliwek', 'bazylia']},
 
     {'name': 'Shake proteinowy z masłem orzechowym i bananem', 'calories': 300,
      'macros': {'protein': 25, 'carbs': 30, 'fats': 10},
@@ -207,11 +207,11 @@ available_recipes = [
 
     {'name': 'Podwójna sałatka z kurczakiem', 'calories': 800, 'macros': {'protein': 60, 'carbs': 40, 'fats': 30},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['pierś z kurczaka', 'rukola', 'pomidory', 'ogórek', 'oliwa z oliwek', 'ocet balsamiczny']},
+     'ingredients': ['pierś z kurczaka', 'rukola', 'pomidor', 'ogórek', 'oliwa z oliwek', 'ocet balsamiczny']},
 
     {'name': 'Podwójna zupa jarzynowa', 'calories': 300, 'macros': {'protein': 10, 'carbs': 50, 'fats': 10},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['marchew', 'ziemniaki', 'por', 'seler', 'cebula', 'czosnek', 'przyprawy']},
+     'ingredients': ['marchew', 'ziemniaki', 'por', 'seler', 'cebula', 'czosnek','sól', 'pieprz']},
 
     {'name': 'Podwójny omlet warzywny', 'calories': 500, 'macros': {'protein': 36, 'carbs': 20, 'fats': 30},
      'meal_type': ['breakfast'],
@@ -224,7 +224,7 @@ available_recipes = [
 
     {'name': 'Podwójna kanapka z awokado i jajkiem', 'calories': 700,
      'macros': {'protein': 24, 'carbs': 60, 'fats': 40},
-     'meal_type': ['breakfast', 'lunch'],
+     'meal_type': ['breakfast'],
      'ingredients': ['chleb pełnoziarnisty', 'awokado', 'jajka', 'rukola', 'pomidor', 'oliwa z oliwek']},
 
     {'name': 'Podwójny kurczak z kaszą bulgur', 'calories': 900, 'macros': {'protein': 70, 'carbs': 90, 'fats': 20},
@@ -233,14 +233,14 @@ available_recipes = [
 
     {'name': 'Podwójna porcja pasty z soczewicą', 'calories': 800, 'macros': {'protein': 40, 'carbs': 120, 'fats': 16},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['soczewica', 'makaron', 'pomidory', 'czosnek', 'cebula', 'przyprawy']},
+     'ingredients': ['soczewica', 'makaron', 'pomidor', 'czosnek', 'cebula', 'sól', 'pieprz']},
 
     {'name': 'Podwójny łosoś z batatami', 'calories': 1000, 'macros': {'protein': 70, 'carbs': 80, 'fats': 40},
      'meal_type': ['dinner'], 'ingredients': ['ryba', 'bataty', 'oliwa z oliwek', 'czosnek', 'rozmaryn']},
 
     {'name': 'Podwójna sałatka grecka', 'calories': 440, 'macros': {'protein': 16, 'carbs': 20, 'fats': 30},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['ogórek', 'pomidory', 'ser feta', 'oliwki', 'cebula', 'oliwa z oliwek', 'oregano']},
+     'ingredients': ['ogórek', 'pomidor', 'ser feta', 'oliwki', 'cebula', 'oliwa z oliwek', 'oregano']},
 
     {'name': 'Podwójne smoothie bananowo-szpinakowe', 'calories': 360,
      'macros': {'protein': 10, 'carbs': 70, 'fats': 4},
@@ -252,7 +252,7 @@ available_recipes = [
     {'name': 'Podwójna porcja pieczonych warzyw z komosą ryżową', 'calories': 600,
      'macros': {'protein': 20, 'carbs': 90, 'fats': 16},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['papryka', 'cukinia', 'komosa ryżowa', 'oliwa z oliwek', 'czosnek', 'przyprawy']},
+     'ingredients': ['papryka', 'cukinia', 'komosa ryżowa', 'oliwa z oliwek', 'czosnek', 'sól', 'pieprz']},
 
     {'name': 'Podwójne placuszki owsiane', 'calories': 580, 'macros': {'protein': 20, 'carbs': 80, 'fats': 20},
      'meal_type': ['breakfast'], 'ingredients': ['płatki owsiane', 'jajka', 'mleko', 'cynamon', 'orzechy']},
@@ -274,7 +274,7 @@ available_recipes = [
     {'name': 'Podwójna porcja gulaszu warzywnego z ciecierzycą', 'calories': 740,
      'macros': {'protein': 40, 'carbs': 90, 'fats': 24},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['ciecierzyca', 'marchew', 'papryka', 'pomidory', 'czosnek', 'przyprawy']},
+     'ingredients': ['ciecierzyca', 'marchew', 'papryka', 'pomidor', 'czosnek', 'sól', 'pieprz']},
 
     {'name': 'Podwójna kanapka z masłem orzechowym', 'calories': 560,
      'macros': {'protein': 16, 'carbs': 50, 'fats': 36},
@@ -287,11 +287,11 @@ available_recipes = [
 
     {'name': 'Podwójna porcja ryżu z fasolą i warzywami', 'calories': 700,
      'macros': {'protein': 24, 'carbs': 120, 'fats': 12},
-     'meal_type': ['lunch', 'dinner'], 'ingredients': ['ryż', 'fasola', 'marchew', 'papryka', 'czosnek', 'przyprawy']},
+     'meal_type': ['lunch', 'dinner'], 'ingredients': ['ryż', 'fasola', 'marchew', 'papryka', 'czosnek', 'sól', 'pieprz']},
 
     {'name': 'Podwójna kanapka z szynką i warzywami', 'calories': 600,
      'macros': {'protein': 30, 'carbs': 70, 'fats': 20},
-     'meal_type': ['breakfast', 'lunch'],
+     'meal_type': ['breakfast'],
      'ingredients': ['chleb', 'szynka', 'sałata', 'pomidor', 'ogórek']},
 
     {'name': 'Podwójna sałatka z tuńczykiem', 'calories': 500, 'macros': {'protein': 40, 'carbs': 20, 'fats': 30},
@@ -322,7 +322,7 @@ available_recipes = [
 
     {'name': 'Podwójne curry z ciecierzycą', 'calories': 760, 'macros': {'protein': 30, 'carbs': 100, 'fats': 30},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['ciecierzyca', 'pomidory', 'czosnek', 'imbir', 'przyprawy curry']},
+     'ingredients': ['ciecierzyca', 'pomidor', 'czosnek', 'imbir', 'przyprawa curry']},
 
     {'name': 'Podwójna zapiekanka makaronowa z serem', 'calories': 900,
      'macros': {'protein': 40, 'carbs': 120, 'fats': 30},
@@ -340,11 +340,11 @@ available_recipes = [
 
     {'name': 'Podwójny shake proteinowy z masłem orzechowym i bananem', 'calories': 600,
      'macros': {'protein': 50, 'carbs': 60, 'fats': 20},
-     'meal_type': ['breakfast', 'snack', 'dinner'],
+     'meal_type': ['breakfast', 'snack'],
      'ingredients': ['białko w proszku', 'masło orzechowe', 'banan', 'mleko roślinne']},
 
     {'name': 'Tofu stir-fry z warzywami', 'calories': 300, 'macros': {'protein': 15, 'carbs': 40, 'fats': 10},
-     'meal_type': ['lunch', 'dinner'], 'ingredients': ['tofu', 'papryka', 'cukinia', 'soja', 'czosnek', 'przyprawy']},
+     'meal_type': ['lunch', 'dinner'], 'ingredients': ['tofu', 'papryka', 'cukinia', 'soja', 'czosnek', 'sól', 'pieprz']},
 
     {'name': 'Podwójne tofu stir-fry z warzywami', 'calories': 600, 'macros': {'protein': 30, 'carbs': 80, 'fats': 20},
      'meal_type': ['lunch', 'dinner'], 'ingredients': ['tofu', 'brokuły', 'marchew', 'soja', 'czosnek', 'imbir']},
@@ -371,11 +371,11 @@ available_recipes = [
 
     {'name': 'Chili con carne', 'calories': 450, 'macros': {'protein': 30, 'carbs': 55, 'fats': 15},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['wołowina', 'fasola czerwona', 'pomidory', 'czosnek', 'papryka']},
+     'ingredients': ['wołowina', 'fasola czerwona', 'pomidor', 'czosnek', 'papryka']},
 
     {'name': 'Podwójne chili con carne', 'calories': 900, 'macros': {'protein': 60, 'carbs': 110, 'fats': 30},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['mielona wołowina', 'fasola czerwona', 'pomidory', 'czosnek', 'papryka']},
+     'ingredients': ['mielona wołowina', 'fasola czerwona', 'pomidor', 'czosnek', 'papryka']},
 
     {'name': 'Smoothie z mango i jogurtem', 'calories': 200, 'macros': {'protein': 8, 'carbs': 35, 'fats': 4},
      'meal_type': ['breakfast', 'snack'],
@@ -387,12 +387,12 @@ available_recipes = [
 
     {'name': 'Kurczak tikka masala z ryżem', 'calories': 500, 'macros': {'protein': 35, 'carbs': 50, 'fats': 20},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['kurczak', 'przyprawy tikka masala', 'ryż', 'mleko kokosowe', 'czosnek']},
+     'ingredients': ['kurczak', 'przyprawa tikka masala', 'ryż', 'mleko kokosowe', 'czosnek']},
 
     {'name': 'Podwójna porcja kurczaka tikka masala z ryżem', 'calories': 1000,
      'macros': {'protein': 70, 'carbs': 100, 'fats': 40},
      'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['kurczak', 'przyprawy tikka masala', 'ryż', 'mleko kokosowe', 'czosnek']},
+     'ingredients': ['kurczak', 'przyprawa tikka masala', 'ryż', 'mleko kokosowe', 'czosnek']},
 
     {'name': 'Wrap z warzywami i hummusem', 'calories': 350, 'macros': {'protein': 12, 'carbs': 50, 'fats': 10},
      'meal_type': ['lunch', 'snack'], 'ingredients': ['tortilla', 'hummus', 'papryka', 'ogórek', 'szpinak']},
@@ -409,7 +409,7 @@ available_recipes = [
      'meal_type': ['lunch', 'dinner'], 'ingredients': ['makaron', 'pieczarki', 'czosnek', 'śmietana', 'pietruszka']},
 
     {'name': 'Podwójna sałatka owocowa', 'calories': 300, 'macros': {'protein': 6, 'carbs': 70, 'fats': 4},
-     'meal_type': ['snack'], 'ingredients': ['owoce (np. jabłka, pomarańcze, winogrona)', 'miód']},
+     'meal_type': ['snack'], 'ingredients': ['owoce', 'miód']},
 
     {'name': 'Quinoa z pieczonym kurczakiem i brokułami', 'calories': 450,
      'macros': {'protein': 30, 'carbs': 50, 'fats': 15},
@@ -453,13 +453,13 @@ available_recipes = [
 
     {'name': 'Makaron pełnoziarnisty z sosem bolońskim', 'calories': 500,
      'macros': {'protein': 25, 'carbs': 65, 'fats': 15}, 'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['makaron pełnoziarnisty', 'mielona wołowina', 'pomidory', 'czosnek', 'cebula',
-                     'przyprawy (bazylia, oregano)', 'oliwa z oliwek']},
+     'ingredients': ['makaron pełnoziarnisty', 'mielona wołowina', 'pomidor', 'czosnek', 'cebula',
+                     'bazylia', 'oregano', 'oliwa z oliwek']},
 
     {'name': 'Podwójny makaron pełnoziarnisty z sosem bolońskim', 'calories': 1000,
      'macros': {'protein': 50, 'carbs': 130, 'fats': 30}, 'meal_type': ['lunch', 'dinner'],
-     'ingredients': ['makaron', 'wołowina', 'pomidory', 'czosnek', 'cebula',
-                     'przyprawy', 'oliwa z oliwek']},
+     'ingredients': ['makaron', 'wołowina', 'pomidor', 'czosnek', 'cebula',
+                     'sól', 'pieprz', 'oliwa z oliwek']},
 
     {'name': 'Sałatka grecka', 'calories': 250, 'macros': {'protein': 7, 'carbs': 20, 'fats': 15},
      'meal_type': ['lunch', 'snack'],
@@ -521,11 +521,11 @@ available_recipes = [
 
     {'name': 'Sałatka z komosą ryżową, szpinakiem i fetą', 'calories': 250,
      'macros': {'protein': 8, 'carbs': 30, 'fats': 12}, 'meal_type': ['lunch', 'snack'],
-     'ingredients': ['komosa ryżowa', 'szpinak', 'feta', 'pomidory', 'ogórek', 'oliwa z oliwek']},
+     'ingredients': ['komosa ryżowa', 'szpinak', 'feta', 'pomidor', 'ogórek', 'oliwa z oliwek']},
 
     {'name': 'Podwójna porcja sałatki z komosą ryżową, szpinakiem i fetą', 'calories': 500,
      'macros': {'protein': 16, 'carbs': 60, 'fats': 24}, 'meal_type': ['lunch', 'snack'],
-     'ingredients': ['komosa ryżowa', 'szpinak', 'feta', 'pomidory', 'ogórek', 'oliwa z oliwek']},
+     'ingredients': ['komosa ryżowa', 'szpinak', 'feta', 'pomidor', 'ogórek', 'oliwa z oliwek']},
 
     {'name': 'Kanapka z jajkiem i awokado', 'calories': 300, 'macros': {'protein': 12, 'carbs': 35, 'fats': 15},
      'meal_type': ['breakfast', 'snack'],
@@ -540,7 +540,7 @@ available_recipes = [
         'calories': 700,
         'macros': {'protein': 25, 'carbs': 100, 'fats': 20},
         'meal_type': ['lunch', 'dinner'],
-        'ingredients': ['kotlet warzywny', 'bułka pełnoziarnista', 'sałata', 'pomidor', 'ogórek', 'bataty', 'przyprawy']
+        'ingredients': ['kotlet warzywny', 'bułka pełnoziarnista', 'sałata', 'pomidor', 'ogórek', 'bataty', 'sól', 'pieprz']
     },
     {
         'name': 'Podwójna porcja zapiekanki ziemniaczanej z kurczakiem i serem',
@@ -603,7 +603,7 @@ available_recipes = [
         'calories': 450,
         'macros': {'protein': 12, 'carbs': 40, 'fats': 25},
         'meal_type': ['lunch', 'dinner'],
-        'ingredients': ['kalafior', 'migdały', 'bulion warzywny', 'czosnek', 'przyprawy']
+        'ingredients': ['kalafior', 'migdały', 'bulion warzywny', 'czosnek', 'sól', 'pieprz']
     },
 
     {
@@ -654,14 +654,14 @@ available_recipes = [
         'calories': 1250,
         'macros': {'protein': 55, 'carbs': 110, 'fats': 55},
         'meal_type': ['lunch', 'dinner'],
-        'ingredients': ['wieprzowina', 'kluski śląskie', 'kapusta kiszona', 'cebula', 'przyprawy']
+        'ingredients': ['wieprzowina', 'kluski śląskie', 'kapusta kiszona', 'cebula', 'sól', 'pieprz']
     },
     {
         'name': 'Zapiekanka makaronowa z mięsem mielonym i serem',
         'calories': 1400,
         'macros': {'protein': 60, 'carbs': 130, 'fats': 60},
         'meal_type': ['lunch', 'dinner'],
-        'ingredients': ['makaron', 'mięso mielone', 'ser żółty', 'sos pomidorowy', 'czosnek', 'cebula', 'przyprawy']
+        'ingredients': ['makaron', 'mięso mielone', 'ser żółty', 'sos pomidorowy', 'czosnek', 'cebula', 'sól', 'pieprz']
     },
     {
         'name': 'Duża porcja lasagne z warzywami i beszamelem',
